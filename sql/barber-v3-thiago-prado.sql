@@ -665,8 +665,10 @@ declare
 begin
   select id into v_emp from empresas where slug = 'thiagoprado';
   if v_emp is null then
-    insert into empresas (nome, profissional, slug, situacao, cor_principal, cor_destaque)
-    values ('Thiago Prado Barbearia', 'Thiago Prado', 'thiagoprado', 'ativa', '#C9A84C', '#111111')
+    -- pago_ate: libera o link por 30 dias (sem isso o link fecharia em 12 dias)
+    insert into empresas (nome, profissional, slug, situacao, pago_ate, cor_principal, cor_destaque)
+    values ('Thiago Prado Barbearia', 'Thiago Prado', 'thiagoprado', 'ativa',
+            (now() at time zone 'America/Sao_Paulo')::date + 30, '#C9A84C', '#111111')
     returning id into v_emp;
   end if;
 

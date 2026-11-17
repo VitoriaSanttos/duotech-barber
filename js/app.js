@@ -520,6 +520,7 @@ TELAS.personalizar = ()=>{
 <div class="section-header"><h2>Personalidade da barbearia</h2>
   <button class="btn-topo primario" onclick="salvarTelaPersonalidade()"><i class="bi bi-check-lg"></i> Salvar</button></div>
 <p class="text-sm text-muted mb-16">Tudo aqui aparece no app do cliente. Cada barbearia tem o seu jeito.</p>
+${CONFIG.MODO_DEMO ? '' : '<p class="text-sm mb-16" style="background:var(--accent-m);border-radius:8px;padding:10px 12px"><i class="bi bi-info-circle"></i> Nesta versão, o que você salva aqui vale para a <b>demonstração</b>. No app de verdade, estes dados vão pelo arquivo <b>sql/dados-da-barbearia.sql</b>.</p>'}
 <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px" class="grid-2">
   <div class="section-box">
     <h3 style="font-size:.9rem;font-weight:700;margin-bottom:12px">Identidade</h3>
@@ -601,7 +602,9 @@ TELAS.config = ()=>{
 </div>
 <div class="section-box">
   <h3 style="font-size:.9rem;font-weight:700;margin-bottom:6px">Banco de dados</h3>
-  <p class="text-sm text-muted">${CONFIG.MODO_DEMO ? 'Modo demonstração: os dados ficam só neste navegador. Para ligar o banco, preencha a URL e a chave pública (anon) em <b>js/config.js</b>.' : 'Conectado ao Supabase.'}</p>
+  <p class="text-sm text-muted">${CONFIG.MODO_DEMO ? 'Modo demonstração: os dados ficam só neste navegador.' : 'O <b>app do cliente</b> já usa o banco de verdade.'}
+    Este painel ainda mostra dados de demonstração; ligar cada tela ao banco é a próxima etapa.
+    Até lá, WhatsApp, Instagram, frase e chave Pix da barbearia são gravados pelo arquivo <b>sql/dados-da-barbearia.sql</b>.</p>
 </div>`;
 };
 function trocarFotoBarbeiro(id, arq){

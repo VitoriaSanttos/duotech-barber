@@ -15,6 +15,7 @@ ARQUIVOS
   js/pix.js             Monta o Pix copia e cola e o QR Code (mesmo código do Beauty)
   sql/schema-barber.sql             Estrutura base do banco (CORRIGIDA, ver abaixo)
   sql/barber-v3-thiago-prado.sql    Novidades desta versão + dados da Thiago Prado
+  sql/dados-da-barbearia.sql        WhatsApp, endereço e chave Pix do Thiago (preencher)
 
 O QUE MUDA
   Para o cliente (agendar.html)
@@ -47,23 +48,25 @@ O QUE MUDA
     - Configurações: pôr a foto de cada barbeiro (aparece no app do cliente).
 
 TESTAR SEM BANCO (modo demonstração)
-  Abra index.html e agendar.html pelo navegador (ou suba na versão de teste do
-  Cloudflare). Enquanto o js/config.js estiver com "SEU_PROJETO", tudo roda em
-  demonstração e fica salvo só no navegador. Aparece uma faixa dourada avisando.
+  Coloque ?demo no fim do endereço: agendar.html?demo
+  Tudo fica salvo só no navegador e aparece uma faixa dourada avisando.
   Conta de exemplo para ver o clube com pontos: WhatsApp (11) 90000-0000, senha 123456.
 
 COMO SUBIR (versão de verdade)
-  1. SQL — projeto Supabase "duotech-barber". CONFIRA O NOME NO TOPO DA TELA.
-     NUNCA rode no projeto do DuoTech Beauty.
-     a) Projeto NOVO, ainda sem dados: rode sql/schema-barber.sql.
-        ATENÇÃO: o começo desse arquivo APAGA as tabelas da barbearia para
-        recomeçar do zero. Não rode se já existir cliente ou agendamento real.
-     b) Depois rode sql/barber-v3-thiago-prado.sql (pode rodar mais de uma vez,
-        não apaga nada).
-     Conferir: select link_publico('thiagoprado');  → deve trazer 23 serviços e 7 planos.
-  2. js/config.js: troque SEU_PROJETO e SUA_CHAVE_ANON_PUBLICA pela URL e pela
-     chave pública (anon / publishable) do projeto. NUNCA a service_role.
-  3. Cloudflare: primeiro no projeto de TESTE, depois no oficial.
+  Projeto Supabase: duotech-barber. CONFIRA O NOME NO TOPO DA TELA.
+  NUNCA rode no projeto do DuoTech Beauty. (Existe também um projeto
+  "tiagoprado", vazio: NÃO é nele.)
+  1. sql/schema-barber.sql — JÁ RODADO (as tabelas base existem). Não rode de
+     novo: o começo dele apaga as tabelas da barbearia.
+  2. sql/barber-v3-thiago-prado.sql — SQL Editor → New query → cole → Run.
+     Conferir: select link_publico('thiagoprado');  → 23 serviços e 7 planos.
+  3. sql/dados-da-barbearia.sql — troque WhatsApp, cidade, endereço e o Pix do
+     Thiago (o que está em MAIÚSCULAS) e rode. Se esquecer algum campo, ele
+     avisa qual e não grava nada.
+  4. js/config.js — JÁ PREENCHIDO com o endereço do projeto duotech-barber e a
+     chave PÚBLICA (publishable). Não precisa mexer.
+  5. Cloudflare: suba o zip primeiro num projeto de TESTE e abra
+     /agendar.html no celular. Depois, no oficial.
 
 SE DER ERRO
   - Subir o app antes do SQL: o app do cliente mostra "Ops" porque as funções

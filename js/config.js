@@ -6,8 +6,8 @@
 
 window.CONFIG = {
   /* ── Supabase ── cole a URL e a chave ANON do seu projeto */
-  SUPABASE_URL: 'https://SEU_PROJETO.supabase.co',
-  SUPABASE_ANON: 'SUA_CHAVE_ANON_PUBLICA',
+  SUPABASE_URL: 'https://pdratfjeoickgaoytwox.supabase.co',   // projeto duotech-barber
+  SUPABASE_ANON: 'sb_publishable_ITBvbXfvuA9cDLdylILhYQ_iQuIvaM6', // chave PÚBLICA: pode ficar no app
 
   /* ── Barbearia ── */
   BARBEARIA_NOME: 'Thiago Prado Barbearia',
