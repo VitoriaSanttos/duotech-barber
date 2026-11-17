@@ -1,0 +1,101 @@
+DUOTECH BARBER · VERSÃO 03 · Thiago Prado Barbearia
+Planos Gold pagos no Pix, conta do cliente com pontos, agendamento online e a personalidade da barbearia
+=====================================================================================
+
+ARQUIVOS
+  index.html            Painel da barbearia (dono e barbeiros)
+  agendar.html          App do cliente (é este link que vai para o Instagram e o WhatsApp)
+  css/barber.css        Visual do painel (branco e preto, dourado da coroa)
+  css/cliente.css       Visual do app do cliente
+  js/config.js          Endereço do Supabase e chave PÚBLICA (anon). Nada secreto aqui.
+  js/dados-demo.js      23 serviços, 7 planos Gold, barbeiros, prêmios e o "jeito de falar"
+  js/app.js             Telas do painel
+  js/modais.js          Janelas do painel (novo agendamento, fechar atendimento, fila)
+  js/cliente.js         App do cliente (agendar, planos, clube, conta)
+  js/pix.js             Monta o Pix copia e cola e o QR Code (mesmo código do Beauty)
+  sql/schema-barber.sql             Estrutura base do banco (CORRIGIDA, ver abaixo)
+  sql/barber-v3-thiago-prado.sql    Novidades desta versão + dados da Thiago Prado
+
+O QUE MUDA
+  Para o cliente (agendar.html)
+    - Topo com a cara da barbearia: coroa TP, nome em letreiro, frase da casa,
+      selo "Especialista em prótese capilar", botões de WhatsApp e Instagram.
+    - Agendar: escolhe o barbeiro (com foto), o serviço (23, com "Em alta" e
+      "a partir de") e um horário livre de verdade.
+    - Planos Gold: os 7 planos com vigência, preço, "Restam X vagas",
+      "Mais vendido" na Barba Ilimitada, vantagens e termos de uso.
+      Ao escolher, aparece o PIX com o valor do plano: QR Code e copia e cola
+      com a chave da própria barbearia. O cliente paga, toca em "Já paguei" e
+      pode mandar o comprovante no WhatsApp. Todo mês, 5 dias antes de vencer,
+      aparece no app uma faixa dourada "Pagar mensalidade" com o Pix.
+    - Clube Gold TP: cartão de membro com os pontos, quanto falta para o
+      próximo prêmio, troca de pontos por prêmio (gera um código), extrato.
+    - Conta: cada cliente cria a sua, com WhatsApp + senha (igual ao Beauty).
+  Para a barbearia (index.html)
+    - Personalidade: nome no letreiro, frase, boas-vindas, especialidade,
+      WhatsApp, Instagram, cor e o JEITO DE FALAR (Descontraído, Clássico ou
+      Premium). Muda o app do cliente inteiro. Serve para qualquer barbearia
+      que comprar o sistema.
+    - App do cliente: prévia do app num celular + botão de copiar o link.
+    - Clube de pontos: regra, prêmios, ranking e "dar baixa" no código que o
+      cliente mostra no balcão.
+    - Planos Gold: vagas restantes, "Mais vendido" e a lista "Pix para conferir"
+      (quem pediu plano, quem disse que pagou). Conferiu no banco? Toque em
+      "Pix recebido": o plano fica ativo por 1 mês e a entrada vai para o Financeiro.
+    - Personalidade: campo da CHAVE PIX (tipo, chave, nome de quem recebe, cidade).
+      Sem chave cadastrada, o app manda o cliente pedir o Pix no WhatsApp.
+    - Configurações: pôr a foto de cada barbeiro (aparece no app do cliente).
+
+TESTAR SEM BANCO (modo demonstração)
+  Abra index.html e agendar.html pelo navegador (ou suba na versão de teste do
+  Cloudflare). Enquanto o js/config.js estiver com "SEU_PROJETO", tudo roda em
+  demonstração e fica salvo só no navegador. Aparece uma faixa dourada avisando.
+  Conta de exemplo para ver o clube com pontos: WhatsApp (11) 90000-0000, senha 123456.
+
+COMO SUBIR (versão de verdade)
+  1. SQL — projeto Supabase "duotech-barber". CONFIRA O NOME NO TOPO DA TELA.
+     NUNCA rode no projeto do DuoTech Beauty.
+     a) Projeto NOVO, ainda sem dados: rode sql/schema-barber.sql.
+        ATENÇÃO: o começo desse arquivo APAGA as tabelas da barbearia para
+        recomeçar do zero. Não rode se já existir cliente ou agendamento real.
+     b) Depois rode sql/barber-v3-thiago-prado.sql (pode rodar mais de uma vez,
+        não apaga nada).
+     Conferir: select link_publico('thiagoprado');  → deve trazer 23 serviços e 7 planos.
+  2. js/config.js: troque SEU_PROJETO e SUA_CHAVE_ANON_PUBLICA pela URL e pela
+     chave pública (anon / publishable) do projeto. NUNCA a service_role.
+  3. Cloudflare: primeiro no projeto de TESTE, depois no oficial.
+
+SE DER ERRO
+  - Subir o app antes do SQL: o app do cliente mostra "Ops" porque as funções
+    novas ainda não existem. Rode o SQL e recarregue.
+  - Cliente que já foi atendido no balcão tenta criar conta: o app pede para
+    ele solicitar a senha no WhatsApp da barbearia (proteção para ninguém pegar
+    os pontos de outra pessoa só sabendo o número). A senha provisória é gerada
+    pela função barbearia_senha_cliente — o botão no painel entra na próxima versão.
+
+CORREÇÕES NO BANCO
+  - schema-barber.sql travava ao rodar (as regras de acesso usavam funções que
+    ainda não tinham sido criadas). A ordem foi ajustada; nenhuma tabela mudou.
+  - SEGURANÇA: a função acesso_empresa() devolvia "vazio" para quem está logado
+    mas não pertence a nenhuma barbearia, e algumas funções deixavam essa pessoa
+    passar. Agora devolve sempre sim/não. A correção está nos dois arquivos SQL.
+
+O QUE FOI TESTADO
+  - SQL num Postgres 16 local imitando o Supabase: os dois arquivos rodaram duas
+    vezes seguidas sem erro. Testado como visitante e como cliente: criar conta,
+    entrar, senha errada, agendar (inclusive dois clientes no mesmo horário),
+    pontos entrando só com atendimento pago (plano e cortesia não contam),
+    trocar pontos, pedir plano e vagas diminuindo. Visitante não consegue ler a
+    tabela de clientes nem gerar senha.
+  - App do cliente e painel no modo demonstração, em Chrome, celular (390px) e
+    computador, sem erros.
+  NÃO testado ainda
+  - No Supabase de verdade (só no Postgres local).
+  - Pix de verdade num banco: o código foi conferido (o QR Code lido é igual
+    ao copia e cola e o dígito verificador do Banco Central confere), mas faça
+    um pagamento de teste com a chave do Thiago antes de divulgar. O Pix é manual: a barbearia confirma quando o dinheiro
+    cair (não há confirmação automática do banco).
+  - O painel ainda lê os dados de demonstração; ligar cada tela ao banco é a
+    próxima etapa (o app do cliente já está ligado).
+  - Durações dos serviços são uma estimativa; a frase "Corte de rei, atendimento
+    de rei." e o recado de boas-vindas são EXEMPLOS — trocar pelas palavras do Thiago.

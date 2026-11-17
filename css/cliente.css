@@ -1,0 +1,235 @@
+/* ═══════════════════════════════════════════════
+   DuoTech Barber v3 · cliente.css
+   Página do cliente (agendar, planos, clube, conta)
+   Personalidade: preto e branco, coroa dourada,
+   títulos em caixa alta como letreiro de barbearia
+═══════════════════════════════════════════════ */
+:root{
+  --preto:#0d0d0d;
+  --preto2:#1a1a1a;
+  --branco:#ffffff;
+  --fundo:#f4f4f2;
+  --linha:#e6e6e3;
+  --texto:#151515;
+  --texto2:#555;
+  --fraco:#8a8a8a;
+  --ouro:#C9A84C;            /* muda conforme a cor escolhida no painel */
+  --ouro-claro:#E4CF8E;
+  --ouro-fundo:rgba(201,168,76,.14);
+  --vermelho:#c62828;
+  --verde:#2e7d32;
+  --r:14px;
+  --sombra:0 1px 3px rgba(0,0,0,.06),0 6px 20px -10px rgba(0,0,0,.18);
+  --letreiro:'Oswald','Arial Narrow',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--fundo);color:var(--texto);font-size:15px;line-height:1.45;padding-bottom:84px}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input,select,textarea{font:inherit}
+a{color:inherit}
+.pagina{max-width:520px;margin:0 auto;background:var(--fundo);min-height:100vh}
+
+/* ── FAIXA DEMO ── */
+.faixa-demo{background:var(--ouro);color:#111;font-size:.72rem;font-weight:700;text-align:center;padding:5px 10px;letter-spacing:.04em}
+
+/* ── TOPO (letreiro) ── */
+.capa{background:var(--preto);color:#fff;padding:28px 20px 22px;position:relative;overflow:hidden;text-align:center}
+.capa::before{content:'';position:absolute;inset:0;opacity:.07;
+  background:repeating-linear-gradient(135deg,var(--ouro) 0 2px,transparent 2px 18px)}
+.capa::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,transparent,var(--ouro),transparent)}
+.capa>*{position:relative}
+.capa .coroa{display:inline-block;margin-bottom:12px;filter:drop-shadow(0 6px 18px rgba(201,168,76,.35))}
+.capa h1{font-family:var(--letreiro);font-weight:700;font-size:2rem;letter-spacing:.08em;text-transform:uppercase;line-height:1}
+.capa .tipo{font-family:var(--letreiro);color:var(--ouro);font-size:.78rem;letter-spacing:.42em;text-transform:uppercase;margin-top:6px;padding-left:.42em}
+.capa .slogan{color:rgba(255,255,255,.75);font-size:.9rem;margin-top:12px;font-style:italic}
+.capa .selo{display:inline-flex;align-items:center;gap:6px;margin-top:14px;border:1px solid rgba(201,168,76,.5);color:var(--ouro-claro);
+  border-radius:30px;padding:5px 12px;font-size:.74rem;font-weight:600;letter-spacing:.02em}
+.capa .atalhos{display:flex;justify-content:center;gap:10px;margin-top:16px}
+.capa .atalho{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.2);display:grid;place-items:center;font-size:1.1rem;color:#fff;text-decoration:none}
+.capa .atalho:active{background:rgba(255,255,255,.1)}
+
+/* ── SAUDAÇÃO ── */
+.saudacao{background:var(--branco);border-bottom:1px solid var(--linha);padding:14px 18px;display:flex;align-items:center;gap:12px}
+.saudacao .txt{flex:1;min-width:0}
+.saudacao .ola{font-weight:800;font-size:1rem}
+.saudacao .sub{font-size:.8rem;color:var(--texto2)}
+.saudacao .pts{background:var(--preto);color:var(--ouro);border-radius:30px;padding:6px 12px;font-weight:800;font-size:.8rem;white-space:nowrap;display:flex;align-items:center;gap:5px}
+
+/* ── ABAS ── */
+.abas{position:fixed;bottom:0;left:0;right:0;z-index:50;background:var(--preto);display:flex;justify-content:center;padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+.abas-in{display:flex;width:100%;max-width:520px}
+.aba{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;color:rgba(255,255,255,.55);font-size:.66rem;font-weight:600;letter-spacing:.03em;border-radius:10px;min-height:48px}
+.aba i{font-size:1.15rem}
+.aba.ativa{color:#fff}
+.aba.ativa i{color:var(--ouro)}
+
+/* ── SEÇÕES ── */
+.secao{padding:20px 16px 8px}
+.passo{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.passo .num{font-family:var(--letreiro);font-weight:700;color:var(--ouro);font-size:1.05rem;letter-spacing:.05em}
+.passo h2{font-family:var(--letreiro);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:1.05rem}
+.passo .linha{flex:1;height:1px;background:var(--linha)}
+.titulo-aba{font-family:var(--letreiro);text-transform:uppercase;letter-spacing:.06em;font-size:1.35rem;font-weight:700;padding:22px 16px 4px}
+.sub-aba{padding:0 16px 6px;color:var(--texto2);font-size:.88rem}
+
+/* ── BARBEIROS ── */
+.barbeiros{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:none}
+.barbeiros::-webkit-scrollbar{display:none}
+.barbeiro{flex:0 0 104px;background:var(--branco);border:2px solid transparent;border-radius:var(--r);padding:12px 8px;text-align:center;box-shadow:var(--sombra);transition:border-color .15s,transform .15s}
+.barbeiro.sel{border-color:var(--ouro);transform:translateY(-2px)}
+.barbeiro .foto{width:64px;height:64px;border-radius:50%;margin:0 auto 8px;background:var(--preto);color:var(--ouro);display:grid;place-items:center;
+  font-family:var(--letreiro);font-size:1.3rem;font-weight:700;overflow:hidden;box-shadow:0 0 0 2px var(--branco),0 0 0 4px var(--linha)}
+.barbeiro.sel .foto{box-shadow:0 0 0 2px var(--branco),0 0 0 4px var(--ouro)}
+.barbeiro .foto img{width:100%;height:100%;object-fit:cover}
+.barbeiro .nome{font-weight:700;font-size:.82rem;line-height:1.2}
+.barbeiro .esp{font-size:.66rem;color:var(--fraco);margin-top:2px;line-height:1.25}
+
+/* ── CHIPS ── */
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1.5px solid var(--linha);background:var(--branco);border-radius:30px;padding:7px 14px;font-size:.8rem;font-weight:600;color:var(--texto2);min-height:36px}
+.chip.sel{background:var(--preto);border-color:var(--preto);color:#fff}
+
+/* ── SERVIÇOS ── */
+.servicos{background:var(--branco);border-radius:var(--r);box-shadow:var(--sombra);overflow:hidden}
+.servico{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px;border-bottom:1px solid var(--linha);min-height:60px}
+.servico:last-child{border-bottom:0}
+.servico .info{flex:1;min-width:0}
+.servico .n{font-weight:700;font-size:.92rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.servico .d{font-size:.74rem;color:var(--fraco);margin-top:1px}
+.servico .p{text-align:right;font-weight:800;font-size:.92rem;white-space:nowrap}
+.servico .p small{display:block;font-size:.62rem;font-weight:600;color:var(--fraco);text-transform:uppercase;letter-spacing:.04em}
+.servico .marca{width:22px;height:22px;border-radius:50%;border:2px solid var(--linha);flex-shrink:0;display:grid;place-items:center;font-size:.75rem;color:transparent}
+.servico.sel{background:var(--preto);color:#fff}
+.servico.sel .d,.servico.sel .p small{color:rgba(255,255,255,.6)}
+.servico.sel .marca{background:var(--ouro);border-color:var(--ouro);color:#111}
+.tag-alta{font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:var(--ouro);color:#111;border-radius:4px;padding:2px 6px}
+
+/* ── DIAS E HORÁRIOS ── */
+.dias{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none}
+.dias::-webkit-scrollbar{display:none}
+.dia{flex:0 0 58px;background:var(--branco);border:1.5px solid var(--linha);border-radius:12px;padding:8px 0;text-align:center;min-height:64px}
+.dia .sem{font-size:.64rem;font-weight:700;text-transform:uppercase;color:var(--fraco);letter-spacing:.06em}
+.dia .num{font-family:var(--letreiro);font-size:1.3rem;font-weight:700;line-height:1.2}
+.dia.sel{background:var(--preto);border-color:var(--preto);color:#fff}
+.dia.sel .sem{color:var(--ouro)}
+.dia.fechado{opacity:.35}
+.horas{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.hora{background:var(--branco);border:1.5px solid var(--linha);border-radius:10px;padding:10px 0;font-weight:700;font-size:.88rem;min-height:44px}
+.hora.sel{background:var(--ouro);border-color:var(--ouro);color:#111}
+.vazio{background:var(--branco);border-radius:var(--r);padding:18px;text-align:center;color:var(--texto2);font-size:.88rem}
+
+/* ── BARRA DE CONFIRMAR ── */
+.barra{position:fixed;left:0;right:0;bottom:62px;z-index:40;display:flex;justify-content:center;padding:0 10px 10px;pointer-events:none}
+.barra-in{pointer-events:auto;width:100%;max-width:500px;background:var(--branco);border-radius:16px;box-shadow:0 10px 40px -8px rgba(0,0,0,.35);padding:12px;display:flex;align-items:center;gap:10px;border:1px solid var(--linha)}
+.barra .resumo{flex:1;min-width:0;font-size:.78rem;color:var(--texto2);line-height:1.3}
+.barra .resumo b{display:block;color:var(--texto);font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;padding:12px 18px;font-weight:700;font-size:.9rem;min-height:46px;transition:transform .1s}
+.btn:active{transform:scale(.97)}
+.btn-preto{background:var(--preto);color:#fff}
+.btn-ouro{background:var(--ouro);color:#111}
+.btn-borda{border:1.5px solid var(--linha);background:var(--branco);color:var(--texto)}
+.btn-wa{background:#25D366;color:#fff}
+.btn-largo{width:100%}
+.btn[disabled]{opacity:.45;pointer-events:none}
+
+/* ── PLANOS ── */
+.planos{padding:12px 16px 20px;display:flex;flex-direction:column;gap:16px}
+.plano{background:var(--branco);border-radius:18px;box-shadow:var(--sombra);padding:22px 20px 18px;position:relative;border:1px solid var(--linha)}
+.plano.top{border:2px solid var(--ouro);margin-top:8px}
+.plano .fita{position:absolute;top:-13px;left:16px;background:var(--preto);color:var(--ouro);font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:6px;display:flex;align-items:center;gap:5px}
+.plano h3{font-size:1.15rem;font-weight:800;line-height:1.25;padding-right:30px}
+.plano .gold{position:absolute;top:20px;right:18px;color:var(--ouro);font-size:1.2rem}
+.plano .vig{font-size:.82rem;color:var(--texto2);margin-top:8px}
+.plano .vig b{color:var(--texto)}
+.plano .preco{font-size:1.65rem;font-weight:900;margin-top:10px;letter-spacing:-.02em}
+.plano .mes{font-size:.8rem;color:var(--fraco);margin-top:-2px}
+.plano .vagas{color:var(--vermelho);font-weight:800;font-size:.86rem;margin-top:8px;display:flex;align-items:center;gap:6px}
+.plano .links{display:flex;flex-direction:column;gap:2px;margin-top:12px}
+.plano .lk{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.88rem;padding:8px 0;min-height:40px;text-decoration:none}
+.plano .lk i{transition:transform .2s}
+.plano .lk.aberto i{transform:rotate(90deg)}
+.plano .vant{list-style:none;margin:2px 0 6px;display:none}
+.plano .vant.aberta{display:block}
+.plano .vant li{font-size:.85rem;padding:5px 0;display:flex;gap:8px;align-items:center;color:var(--texto2)}
+.plano .vant li i{color:var(--ouro)}
+.plano .btn{margin-top:12px}
+
+/* ── CLUBE ── */
+.cartao{margin:14px 16px 6px;border-radius:20px;padding:20px;color:#fff;position:relative;overflow:hidden;min-height:190px;
+  background:radial-gradient(120% 140% at 100% 0%,#2b2414 0%,#0d0d0d 55%);border:1px solid rgba(201,168,76,.45);box-shadow:0 18px 40px -18px rgba(0,0,0,.6)}
+.cartao .marca-dagua{position:absolute;right:-18px;bottom:-18px;opacity:.12}
+.cartao .topo-c{display:flex;justify-content:space-between;align-items:flex-start}
+.cartao .clube{font-family:var(--letreiro);letter-spacing:.2em;text-transform:uppercase;font-size:.78rem;color:var(--ouro)}
+.cartao .membro{font-weight:700;margin-top:4px;font-size:.95rem}
+.cartao .saldo{font-family:var(--letreiro);font-size:3rem;font-weight:700;line-height:1;margin-top:18px;color:var(--ouro-claro)}
+.cartao .saldo small{font-size:.9rem;letter-spacing:.15em;color:rgba(255,255,255,.6);margin-left:6px}
+.cartao .regra{font-size:.74rem;color:rgba(255,255,255,.6);margin-top:6px}
+.progresso{margin:12px 16px 4px;background:var(--branco);border-radius:var(--r);padding:14px;box-shadow:var(--sombra)}
+.progresso .rot{display:flex;justify-content:space-between;font-size:.8rem;font-weight:600;margin-bottom:8px}
+.progresso .rot span:last-child{color:var(--fraco)}
+.trilho{height:8px;background:var(--linha);border-radius:8px;overflow:hidden}
+.trilho div{height:100%;background:linear-gradient(90deg,var(--ouro),var(--ouro-claro));border-radius:8px;transition:width .6s}
+.lista{margin:12px 16px;background:var(--branco);border-radius:var(--r);box-shadow:var(--sombra);overflow:hidden}
+.lista h4{font-family:var(--letreiro);text-transform:uppercase;letter-spacing:.08em;font-size:.82rem;padding:14px 14px 6px;color:var(--texto2);font-weight:600}
+.item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--linha)}
+.item .ic{width:38px;height:38px;border-radius:10px;background:var(--ouro-fundo);color:var(--ouro);display:grid;place-items:center;font-size:1.05rem;flex-shrink:0}
+.item .tx{flex:1;min-width:0}
+.item .tx b{display:block;font-size:.88rem}
+.item .tx span{font-size:.74rem;color:var(--fraco)}
+.item .pts{font-weight:800;font-size:.85rem;white-space:nowrap}
+.item .pts.mais{color:var(--verde)}
+.item .pts.menos{color:var(--vermelho)}
+.item .btn{padding:8px 14px;min-height:38px;font-size:.8rem}
+.codigo{font-family:ui-monospace,Menlo,monospace;font-weight:800;letter-spacing:.12em;background:var(--preto);color:var(--ouro);border-radius:6px;padding:3px 8px;font-size:.8rem}
+
+/* ── CONTA ── */
+.caixa{margin:14px 16px;background:var(--branco);border-radius:var(--r);box-shadow:var(--sombra);padding:18px}
+.alternar{display:flex;background:var(--fundo);border-radius:12px;padding:4px;margin-bottom:16px}
+.alternar button{flex:1;padding:10px;border-radius:9px;font-weight:700;font-size:.85rem;color:var(--texto2);min-height:42px}
+.alternar button.sel{background:var(--preto);color:#fff}
+.campo{margin-bottom:12px}
+.campo label{display:block;font-size:.76rem;font-weight:700;color:var(--texto2);margin-bottom:5px}
+.campo input{width:100%;border:1.5px solid var(--linha);border-radius:12px;padding:12px 14px;font-size:1rem;background:var(--fundo);min-height:48px}
+.campo input:focus{outline:none;border-color:var(--ouro);background:#fff}
+.campo small{font-size:.72rem;color:var(--fraco)}
+.erro{background:rgba(198,40,40,.08);color:var(--vermelho);border-radius:10px;padding:10px 12px;font-size:.84rem;font-weight:600;margin-bottom:12px;display:none}
+.erro.on{display:block}
+.aviso{font-size:.78rem;color:var(--texto2);text-align:center;margin-top:12px}
+.link-btn{color:var(--texto);font-weight:700;text-decoration:underline;font-size:.84rem;padding:6px}
+
+/* ── FOLHA (modal de baixo) ── */
+.fundo-folha{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.fundo-folha.on{display:flex}
+.folha{background:var(--branco);width:100%;max-width:520px;border-radius:22px 22px 0 0;padding:22px 18px calc(22px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto;animation:sobe .22s ease}
+@keyframes sobe{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.folha .fechar{float:right;font-size:1.4rem;color:var(--fraco);width:40px;height:40px;margin:-8px -6px 0 0}
+.folha h3{font-family:var(--letreiro);text-transform:uppercase;letter-spacing:.05em;font-size:1.25rem;margin-bottom:6px}
+.folha p{color:var(--texto2);font-size:.9rem}
+.sucesso{text-align:center;padding:8px 0}
+.sucesso .grande{font-size:2.6rem;color:var(--ouro)}
+.sucesso .cod{font-family:ui-monospace,Menlo,monospace;font-size:2rem;font-weight:800;letter-spacing:.2em;background:var(--preto);color:var(--ouro);border-radius:14px;padding:14px;margin:14px 0}
+
+/* ── PIX ── */
+.pix-valor{font-family:var(--letreiro);font-size:2.2rem;font-weight:700;text-align:center;margin:10px 0 6px}
+.pix-qr{width:210px;height:210px;margin:6px auto 12px;padding:12px;background:#fff;border:1px solid var(--linha);border-radius:16px}
+.pix-qr svg{width:100%;height:100%;display:block}
+.pix-passos{background:var(--fundo);border-radius:12px;padding:12px 14px;font-size:.84rem;display:flex;flex-direction:column;gap:5px;margin-bottom:12px;color:var(--texto2)}
+.pix-cola{background:var(--fundo);border:1.5px dashed var(--linha);border-radius:12px;padding:10px 12px;margin-bottom:10px;max-height:74px;overflow:auto}
+.pix-cola code{font-family:ui-monospace,Menlo,monospace;font-size:.72rem;word-break:break-all;color:var(--texto2);user-select:all}
+.faixa-pagar{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--ouro);color:#111;padding:12px 18px;min-height:56px}
+.faixa-pagar>i:first-child{font-size:1.4rem}
+.faixa-pagar span{flex:1;font-size:.8rem;line-height:1.3}
+.faixa-pagar b{display:block;font-size:.88rem}
+
+/* ── TOAST ── */
+.toast{position:fixed;left:50%;bottom:150px;transform:translateX(-50%);background:var(--preto);color:#fff;padding:10px 18px;border-radius:30px;font-size:.84rem;font-weight:600;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,.3);max-width:90%;text-align:center}
+
+/* ── RODAPÉ ── */
+.rodape{text-align:center;padding:24px 16px 12px;font-size:.7rem;color:var(--fraco)}
+
+@media (min-width:700px){
+  body{background:#e9e9e6}
+  .pagina{box-shadow:0 0 60px rgba(0,0,0,.08)}
+}

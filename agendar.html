@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thiago Prado Barbearia · Agende seu horário</title>
+<meta name="description" content="Agende seu horário, conheça os planos Gold e junte pontos no clube da Thiago Prado Barbearia.">
+<meta name="theme-color" content="#0d0d0d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="css/cliente.css?v=03">
+</head>
+<body>
+
+<div class="pagina" id="pagina">
+  <div style="padding:60px 20px;text-align:center;color:#888">Carregando…</div>
+</div>
+
+<!-- abas (embaixo, como app) -->
+<nav class="abas" aria-label="Menu">
+  <div class="abas-in">
+    <button class="aba ativa" data-aba="agendar"><i class="bi bi-scissors"></i>Agendar</button>
+    <button class="aba" data-aba="planos"><i class="bi bi-gem"></i>Planos Gold</button>
+    <button class="aba" data-aba="clube"><i class="bi bi-star-fill"></i>Clube</button>
+    <button class="aba" data-aba="conta"><i class="bi bi-person-circle"></i>Conta</button>
+  </div>
+</nav>
+
+<!-- folha que sobe de baixo (login, confirmação, código) -->
+<div class="fundo-folha" id="fundoFolha"><div class="folha" id="folha"></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js" integrity="sha384-8FWZA6BGMXhsfO+BLtrJK0We6gg5o1JyO8xQm6peWDEUs17ACA5ziE/NIAkl9z2k" crossorigin="anonymous"></script>
+<script src="js/config.js?v=03"></script>
+<script src="js/pix.js?v=03"></script>
+<script src="js/dados-demo.js?v=03"></script>
+<script src="js/cliente.js?v=03"></script>
+</body>
+</html>
