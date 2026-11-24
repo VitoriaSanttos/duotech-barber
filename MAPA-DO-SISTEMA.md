@@ -36,6 +36,35 @@ Legenda: ✅ pronto (modo demonstração) · 🟡 parcial · ⬜ a fazer · ✝�
 | Pote (dinheiro dos planos dividido entre barbeiros) | Planos inteligentes · Pote | ⬜ **precisa da regra do Thiago** |
 | Clube do assinante (empresas parceiras, cupons) | Clube Gold TP | 🟡 falta empresas parceiras e cupons |
 
+### Assinatura com cartão (cobrança automática todo mês)
+
+Plataforma recomendada: **Asaas** (o projeto já previa: `asaas_subscription_id`, `ASAAS_WEBHOOK_PATH`).
+
+1. No app, o cliente escolhe o plano e preenche nome, CPF, e-mail, celular e endereço (CEP preenche a rua).
+2. Uma Edge Function do Supabase, com a chave do Asaas guardada em Secrets, cria o cliente e a
+   assinatura no Asaas e devolve o link de pagamento.
+3. O cliente digita o cartão **na página do Asaas**: o número do cartão nunca passa pelo DuoTech.
+4. O Asaas cobra sozinho todo mês e avisa o DuoTech (webhook): pago → plano ativo e entrada no
+   Financeiro; atrasado → "Mensalidade em aberto" no Início; cancelado → plano cancelado.
+5. Segunda opção sem cartão: **Pix Automático** (Asaas, conta PJ).
+
+CPF e endereço ficam no Asaas; no banco do DuoTech fica só o código do cliente no Asaas.
+Pendências: conta Asaas PJ do Thiago; chave de teste (sandbox) para desenvolver; para vender a outras
+barbearias, decidir entre cada uma conectar a própria conta (mais simples) ou subcontas do DuoTech
+(exige alinhar com o Asaas).
+
+### Marketing de assinaturas (ideias que viram funcionalidade)
+
+| Ideia | Status |
+|---|---|
+| Lista "clientes que pagariam menos no plano" (avulso que gasta mais que o plano) | ⬜ |
+| Plano Flex (só em dias e horários vazios) | ⬜ |
+| Indique e ganhe (assinante traz assinante) | ⬜ |
+| Primeiro mês promocional com permanência mínima | ⬜ |
+| Aviso "pagou e não veio há 15 dias" | ⬜ |
+| Pausar em vez de cancelar + pergunta "o que faltou?" | ⬜ |
+| Bônus do barbeiro por plano vendido (Premiação da Meta do mês) | 🟡 |
+
 ## Financeiro e gestão
 
 | CashBarber | DuoTech Barber | Status |
