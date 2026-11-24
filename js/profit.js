@@ -302,7 +302,7 @@ function mudarPremissa(k, v){
 function _rerenderProfit(){
   const abertos = [...document.querySelectorAll('#conteudo-principal details')].map(d=>d.open);
   const y = window.scrollY;
-  navegar('profit', window._paramsProfit||{});
+  navegar('profit', {...(window._paramsProfit||{}), _semRecarregar:true});
   document.querySelectorAll('#conteudo-principal details').forEach((d,i)=>{ if(abertos[i]) d.open = true; });
   window.scrollTo(0, y);
 }

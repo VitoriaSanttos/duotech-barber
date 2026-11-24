@@ -6,9 +6,10 @@ funcionalidade, **não** copiamos nomes, marca nem visual.
 
 Legenda: ✅ pronto (modo demonstração) · 🟡 parcial · ⬜ a fazer · ✝️ diferencial de fé
 
-> Importante: **todas as telas do painel ainda usam dados de demonstração**.
-> Só o app do cliente (agendar.html) já está ligado ao Supabase.
-> Ligar o painel ao banco é o passo que transforma tudo isso em sistema de verdade.
+> Versão 4: o painel está **ligado ao banco** (login, Início, Agenda, Comanda, Caixa,
+> Clientes, Planos, Meta do mês, Lucro real, Propósito e Academia).
+> Ainda com exemplos: Fila, Financeiro, Comissões, Estoque, Clube de pontos,
+> Personalidade e Configurações. Use `index.html?demo` para o modo demonstração.
 
 ## Operação
 
@@ -16,9 +17,9 @@ Legenda: ✅ pronto (modo demonstração) · 🟡 parcial · ⬜ a fazer · ✝�
 |---|---|---|
 | Dashboard (Hoje / Crescimento) | **Início** | ✅ |
 | Live de mentoria no topo | **Palavra do dia + Momento da equipe** | ✅ ✝️ |
-| Agenda (colunas por barbeiro, bloqueios, chegaram/faltaram, % ocupado) | Agenda | 🟡 falta colunas por barbeiro, bloqueio, chegou/faltou |
-| Comandas (abertas, de outros dias) | Fechar atendimento | 🟡 falta comanda que fica aberta e vai somando |
-| Caixa (abrir, entrada, saída, fechar, histórico) | **Caixa** | ✅ conferência da gaveta, gratidão e dízimo opcional ✝️ |
+| Agenda (colunas por barbeiro, bloqueios, chegaram/faltaram, % ocupado) | Agenda | ✅ colunas por barbeiro, chegou/faltou, contadores · ⬜ bloqueio de horário |
+| Comandas (abertas, de outros dias) | Comanda | ✅ serviços + produtos, desconto, plano, cortesia, avaliação · 🟡 comanda aberta = cliente "na cadeira" |
+| Caixa (abrir, entrada, saída, fechar, histórico) | **Caixa** | ✅ ligado ao banco, conferência da gaveta, gratidão e dízimo opcional ✝️ |
 | Bar / Cozinha | — | ⬜ vender bebida/comida na comanda |
 | Fila | Fila de espera | 🟡 devocional na fila ✝️ a fazer |
 
@@ -57,7 +58,7 @@ barbearias, decidir entre cada uma conectar a própria conta (mais simples) ou s
 
 | Ideia | Status |
 |---|---|
-| Lista "clientes que pagariam menos no plano" (avulso que gasta mais que o plano) | ⬜ |
+| Lista "clientes que pagariam menos no plano" (avulso que gasta mais que o plano) | ✅ selo na tela Clientes |
 | Plano Flex (só em dias e horários vazios) | ⬜ |
 | Indique e ganhe (assinante traz assinante) | ⬜ |
 | Primeiro mês promocional com permanência mínima | ⬜ |
@@ -73,7 +74,7 @@ barbearias, decidir entre cada uma conectar a própria conta (mais simples) ou s
 | Categorias financeiras, contas bancárias, formas de pagamento | — | ⬜ |
 | Gerar comissões | Comissões | 🟡 |
 | Estoque | Estoque | 🟡 alerta de mínimo já no Início |
-| Clientes (cadastro, bloqueados, recompras) | Clientes | 🟡 falta bloqueados e recompra |
+| Clientes (cadastro, bloqueados, recompras) | Clientes | ✅ busca, visitas, plano, pontos, "pagaria menos no plano", senha do app · ⬜ bloqueados |
 | Auditorias | — | ⬜ registro de quem fez o quê |
 | Contratos/documentos dos profissionais | Alerta no Início | 🟡 |
 

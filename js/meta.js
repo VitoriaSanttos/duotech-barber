@@ -84,6 +84,9 @@ function serieMes(ano, mes){
   return _serieCache[chave] = dias;
 }
 
+/* Comandas do mês separadas em baldes (demo: proporção típica; o banco troca por valores reais) */
+function mixDoMes(comandasRec){ return {avulsos:comandasRec*.55, extras:comandasRec*.27, produtos:comandasRec*.18}; }
+
 /* ─── CONTAS DA META ─── */
 function calcMeta(){
   const cfg = lerMeta(), hoje = new Date();
@@ -120,9 +123,9 @@ function calcMeta(){
   const proj = f => soma(dias.filter(x=>x.passado),x=>x.comandas) + Math.max(comandasHoje, ritmo*(hojeD&&hojeD.aberto?hojeD.peso:0)*f) + ritmo*pesoFuturo*f
                     + previstas*(f<1?0.97:1) + novasRitmo*f;
   /* mix: o que entrou de comanda separado em baldes (demo: proporção típica) */
-  const mixReal = {avulsos:comandasRec*.55, extras:comandasRec*.27, produtos:comandasRec*.18};
+  const mixReal = mixDoMes(comandasRec);
   return {cfg, dias, M, previstas, metaComandas, assinRec, novasRec, comandasRec, entrou, aindaCaem, faltaComanda,
-    pct: cfg.meta ? entrou/cfg.meta*100 : 0, precisaHoje, precisaPorDia, restantes:restantes.length, hojeD,
+    pct: cfg.meta ? entrou/cfg.meta*100 : 0, precisaHoje: precisaHoje||0, precisaPorDia, restantes:restantes.length, hojeD,
     q, qd, metaQ, realQ, restQ, projReal:proj(1), projOtim:proj(1.1), projPess:proj(.85), mixReal,
     falta: Math.max(cfg.meta - entrou - aindaCaem, 0)};
 }
@@ -148,7 +151,7 @@ ${aba==='acompanhar' ? metaAcompanhar(r, params.vista||'quinzena')
 };
 
 function heroMeta(r, compacto=false){
-  const base = Math.max(r.cfg.meta, r.entrou + r.aindaCaem);
+  const base = Math.max(r.cfg.meta, r.entrou + r.aindaCaem, 1);
   const w = v => `${Math.max(v,0)/base*100}%`;
   const hoje = new Date();
   return `
@@ -377,7 +380,7 @@ function metaConfigurar(r){
 function _metaSet(fn){
   const m = lerMeta(); fn(m); salvarMeta(m);
   Object.keys(_serieCache).forEach(k=>delete _serieCache[k]);
-  const y = window.scrollY; navegar('meta', window._paramsMeta||{}); window.scrollTo(0,y);
+  const y = window.scrollY; navegar('meta', {...(window._paramsMeta||{}), _semRecarregar:true}); window.scrollTo(0,y);
 }
 
 function abrirCalibrar(){

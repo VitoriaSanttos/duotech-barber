@@ -2,7 +2,82 @@ DUOTECH BARBER · VERSÃO 03 · Thiago Prado Barbearia
 Planos Gold pagos no Pix, conta do cliente com pontos, agendamento online e a personalidade da barbearia
 =====================================================================================
 
-VERSÃO 04 (em andamento) · novo Início e PROPÓSITO
+VERSÃO 04 · PAINEL LIGADO AO BANCO
+=====================================================================================
+O painel (index.html) agora lê e grava no Supabase. Para ver o modo demonstração,
+continue usando index.html?demo (nada é gravado).
+
+COMO SUBIR (nesta ordem)
+  Projeto Supabase: duotech-barber. CONFIRA O NOME NO TOPO DA TELA.
+  NUNCA rode no projeto do DuoTech Beauty.
+  1. SQL Editor → New query → cole sql/barber-v4-painel.sql → Run.
+     (Precisa ter rodado antes o schema-barber.sql e o barber-v3-thiago-prado.sql.
+      Pode rodar de novo sem problema.)
+  2. Authentication → Users → Add user → Create new user:
+     e-mail do Thiago + uma senha forte, marque "Auto Confirm User".
+     A senha NUNCA vai em arquivo nem em mensagem.
+  3. Abra sql/criar-acesso-painel.sql, troque EMAIL_DO_THIAGO pelo e-mail do passo 2,
+     confira os nomes dos barbeiros e rode. Ele liga o login à barbearia e cadastra
+     os barbeiros que só aparecem na agenda (sem login). Se faltar algo, avisa e não grava.
+  4. Authentication → Sign In / Providers → desligue "Allow new users to sign up".
+     (Mesmo ligado, quem se cadastrar sozinho não vê nada, mas é melhor fechar a porta.)
+  5. Suba os arquivos primeiro num projeto de TESTE da Cloudflare, abra /index.html,
+     entre com o e-mail e a senha do Thiago e faça o roteiro do "PRIMEIRO DIA" abaixo.
+
+PRIMEIRO DIA NO PAINEL
+  - Caixa → Abrir caixa (com o troco da gaveta). Sem caixa aberto, a comanda paga
+    em dinheiro, Pix ou cartão não fecha: é de propósito, para o caixa bater.
+  - Lucro real → Premissas: "Barbeiro · serviço" e "Barbeiro · produto". A comissão
+    usa a % do cadastro do barbeiro; quem não tiver % no cadastro usa a das premissas.
+    Produto sem % nas premissas não gera comissão.
+  - Meta do mês → Configurar a meta.
+  - Agenda → um agendamento de teste → Chegou → Fechar comanda → confira no Caixa.
+
+O QUE JÁ ESTÁ LIGADO AO BANCO
+  - Login e "Sair" (no celular, o botão de sair fica no topo).
+  - Início: faturamento, ocupação real da agenda, planos, ticket, Pix para conferir
+    (com "Pix recebido"), mensalidade em aberto, estoque mínimo, pedidos de oração.
+  - Agenda: dia a dia, uma coluna por barbeiro, Confirmar, Chegou, Faltou, Cancelar,
+    lembrete pelo WhatsApp, Novo agendamento (com busca de cliente e aviso de horário ocupado).
+  - Comanda (Fechar atendimento): serviços e produtos com preço editável, desconto,
+    Pix, crédito, débito, dinheiro, plano e cortesia, avaliação. Grava de uma vez:
+    agenda, caixa, financeiro, comissão, pontos do clube, baixa no estoque e uso do plano
+    (com limite de cortes do mês). Cliente que chegou sem agendar não trava a agenda.
+  - Caixa: abrir, entrada, saída, fechar com conferência da gaveta, histórico.
+  - Clientes: busca, visitas, última visita, pontos, plano, "pagaria menos no plano",
+    WhatsApp e senha provisória do app (botão da chave).
+  - Planos: assinantes por plano, vagas, Pix para conferir.
+  - Meta do mês, Lucro real, Palavra e oração e Academia gravam no banco.
+    Na Academia, favoritos e presença no ao vivo ficam só no aparelho.
+  - Pedido de oração pelo app: a função já existe no banco (cliente_pedir_oracao);
+    o botão no app do cliente entra na próxima versão.
+
+AINDA COM EXEMPLOS (aparece um aviso azul na tela)
+  Fila de espera, Financeiro, Comissões, Estoque, Clube de pontos, Personalidade e
+  Configurações. Criar e editar planos e serviços pelo painel também fica para a próxima etapa.
+
+CORREÇÕES DE SEGURANÇA NESTA VERSÃO
+  - Um administrador conseguia transformar o próprio login em "super" e ver TODAS as
+    barbearias. Agora o banco recusa.
+  - Barbeiro sem login: antes todo perfil precisava ser um login.
+
+O QUE FOI TESTADO
+  - SQL num Postgres 16 local imitando o Supabase (papéis anon/authenticated, RLS,
+    auth.uid()): rodou duas vezes seguidas sem erro; testes de segurança (virar super,
+    uma barbearia mexendo na outra, visitante chamando funções do painel: tudo recusado),
+    caixa, comanda, comissão, plano, pontos, estoque, meta, oração e Academia.
+  - Painel no Chrome (computador e celular) falando com esse Postgres local, entrando
+    como o Thiago: login, agenda, comanda, caixa, clientes, planos, meta, lucro, oração,
+    Academia e sair. Sem erros e nenhuma tela passa da largura do celular.
+  - Modo demonstração (?demo): todas as telas abrem sem erro.
+  NÃO testado ainda
+  - No Supabase de verdade. O login real do Supabase não pôde ser rodado aqui (o
+    ambiente bloqueou o download do servidor), então o login foi simulado no teste.
+    Faça o roteiro do PRIMEIRO DIA no projeto de teste antes de usar com clientes.
+
+=====================================================================================
+
+VERSÃO 04 (telas) · novo Início e PROPÓSITO
   - Início refeito com a estrutura do Dashboard do CashBarber: saudação, abas
     Hoje e Crescimento, "Saúde do negócio" (faturamento x mês passado x ano,
     ocupação da agenda com meta, planos vendidos/cancelados, ticket médio,
@@ -68,6 +143,10 @@ ARQUIVOS
   sql/schema-barber.sql             Estrutura base do banco (CORRIGIDA, ver abaixo)
   sql/barber-v3-thiago-prado.sql    Novidades desta versão + dados da Thiago Prado
   sql/dados-da-barbearia.sql        WhatsApp, endereço e chave Pix do Thiago (preencher)
+  sql/barber-v4-painel.sql          Versão 4: painel ligado ao banco + correção de segurança
+  sql/criar-acesso-painel.sql       Login do Thiago no painel e barbeiros sem login (preencher)
+  js/banco.js                       Login do painel e leitura/gravação no banco
+  js/operacao.js                    Agenda, comanda, novo agendamento, clientes e planos (banco)
 
 O QUE MUDA
   Para o cliente (agendar.html)

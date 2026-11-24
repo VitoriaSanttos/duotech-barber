@@ -17,10 +17,15 @@ function navegar(tela, params={}){
   if(!cp) return;
   const fn = TELAS[tela];
   if(!fn){ cp.innerHTML='<p style="padding:24px;color:var(--muted)">Tela não encontrada.</p>'; return; }
+  const vez = (window._navVez = (window._navVez||0) + 1);
+  window._telaAtual = tela; window._paramsAtual = params;
   const html = fn(params);
-  if(html instanceof Promise){ cp.innerHTML=''; html.then(h=>{ cp.innerHTML=h; afterRender(tela); }); }
+  if(html instanceof Promise){
+    cp.innerHTML='<div class="carregando" role="status"><span></span> Carregando…</div>';
+    html.then(h=>{ if(vez!==window._navVez) return; cp.innerHTML=h; afterRender(tela); })
+        .catch(e=>{ if(vez!==window._navVez) return; console.error(e); cp.innerHTML=`<div class="section-box acao-vazio">${DB.esc(e.message||'Não foi possível abrir esta tela.')}</div>`; });
+  }
   else{ cp.innerHTML=html; afterRender(tela); }
-  window._telaAtual = tela;
   document.getElementById('titulo-topo').textContent = TITULOS[tela]||'';
 }
 
@@ -178,30 +183,30 @@ function abaHoje(){
 <div class="acao-grid">
   ${blocoAcao({ico:'bi-qr-code', cor:'ouro', titulo:'Pix de plano para conferir', sub:'cliente pediu o plano, confira se o Pix caiu',
      qtd:d.pix_conferir.length,
-     itens:d.pix_conferir.map(x=>itemAcao(ini(x.nome), x.nome, `${x.plano} · ${brl(x.valor)} · ${x.quando}${x.disse_que_pagou?' · <b>disse que pagou</b>':''}`,
-       `<button class="acao-btn verde" onclick="DB.toast('Plano de ${x.nome} ativado','sucesso')">Pix recebido</button>`)),
+     itens:d.pix_conferir.map(x=>itemAcao(ini(x.nome), DB.esc(x.nome), `${DB.esc(x.plano)} · ${brl(x.valor)} · ${x.quando}${x.disse_que_pagou?' · <b>disse que pagou</b>':''}`,
+       (x.id ? `<button class="acao-btn verde" onclick="confirmarPixPlano('${x.id}')">Pix recebido</button>` : `<button class="acao-btn verde" onclick="DB.toast('Plano de ${DB.esc(x.nome)} ativado','sucesso')">Pix recebido</button>`))),
      rodape:`<a onclick="navegar('planos')">Ver todos <i class="bi bi-chevron-right"></i></a>`})}
 
   ${blocoAcao({ico:'bi-hourglass-split', cor:'laranja', titulo:'Mensalidade em aberto', sub:'plano venceu e o Pix ainda não chegou',
      qtd:d.mensalidade_aberta.length,
-     itens:d.mensalidade_aberta.map(x=>itemAcao(ini(x.nome), x.nome, `${x.plano} · ${x.dias} dia${x.dias>1?'s':''} em atraso`,
+     itens:d.mensalidade_aberta.map(x=>itemAcao(ini(x.nome), DB.esc(x.nome), `${DB.esc(x.plano)} · ${x.dias} dia${x.dias>1?'s':''} em atraso`,
        `<a class="acao-whats" target="_blank" rel="noopener" title="Lembrar pelo WhatsApp" href="${linkWhats(x.tel,
          `Fala, ${x.nome.split(' ')[0]}! Tudo certo? Passando pra lembrar que a mensalidade do ${x.plano} venceu. Quando puder, é só pagar pelo app que teu plano continua ativo. Deus abençoe!`)}"><i class="bi bi-whatsapp"></i></a>`)),
      rodape:`<a onclick="navegar('planos')">Ver inadimplentes <i class="bi bi-chevron-right"></i></a>`})}
 
   ${f.fe_ativa ? blocoAcao({ico:'bi-heart', cor:'roxo', titulo:'Pedidos de oração', sub:'clientes pediram oração pelo app, em particular',
      qtd:pedidos.length,
-     itens:pedidos.slice(0,3).map(x=>itemAcao(x.anonimo?'<i class="bi bi-person"></i>':ini(x.nome), x.anonimo?'Anônimo':x.nome, x.texto,
+     itens:pedidos.slice(0,3).map(x=>itemAcao(x.anonimo?'<i class="bi bi-person"></i>':ini(x.nome), x.anonimo?'Anônimo':DB.esc(x.nome), DB.esc(x.texto),
        `<button class="acao-btn roxo" onclick="marcarOrado('${x.id}');navegar('inicio')">Orei</button>`)),
      rodape:`<a onclick="navegar('proposito')">Ver todos <i class="bi bi-chevron-right"></i></a>`}) : ''}
 
   ${blocoAcao({ico:'bi-box-seam', cor:'vermelho', titulo:'Estoque mínimo', sub:'repõe antes de faltar na venda', alerta:true,
      qtd:d.estoque_minimo.length,
-     itens:d.estoque_minimo.slice(0,3).map(x=>itemAcao('<i class="bi bi-box"></i>', x.nome, `atual ${x.atual} · mínimo ${x.min}`,
+     itens:d.estoque_minimo.slice(0,3).map(x=>itemAcao('<i class="bi bi-box"></i>', DB.esc(x.nome), `atual ${x.atual} · mínimo ${x.min}`,
        `<span class="badge vermelho">repor</span>`)),
      rodape:`${d.estoque_minimo.length>3?`<span>+${d.estoque_minimo.length-3} outros</span>`:''}<a onclick="navegar('estoque')">Ver produtos <i class="bi bi-chevron-right"></i></a>`})}
 
-  ${blocoAcao({ico:'bi-file-earmark-text', cor:'azul', titulo:'Contratos dos barbeiros', sub:'sem contrato ou vencendo em até 60 dias',
+  ${typeof BANCO!=='undefined' && BANCO.ativo ? '' : blocoAcao({ico:'bi-file-earmark-text', cor:'azul', titulo:'Contratos dos barbeiros', sub:'sem contrato ou vencendo em até 60 dias',
      qtd:d.contratos_pendentes.length,
      itens:d.contratos_pendentes.map(x=>itemAcao(ini(x.nome), x.nome, x.situacao, `<span class="badge vermelho">Pendente</span>`)),
      rodape:`<a onclick="navegar('comissoes')">Ver barbeiros <i class="bi bi-chevron-right"></i></a>`})}
@@ -310,10 +315,11 @@ TELAS.proposito = ()=>{
     <div class="section-box">
       <h3 class="box-tit"><i class="bi bi-heart"></i> Pedidos de oração</h3>
       <p class="text-muted text-sm mb-16">O cliente escreve pelo app, em particular. Só a equipe vê. Ele escolhe se quer aparecer com o nome.</p>
+      ${PEDIDOS_ORACAO_DEMO.length ? '' : '<p class="text-muted text-sm">Nenhum pedido ainda. Eles chegam pelo app do cliente.</p>'}
       ${PEDIDOS_ORACAO_DEMO.map(x=>`
         <div class="oracao-item ${orados.includes(x.id)?'orado':''}">
-          <div class="oracao-topo"><strong>${x.anonimo?'Anônimo':x.nome}</strong><span>${x.quando}</span></div>
-          <p>${x.texto}</p>
+          <div class="oracao-topo"><strong>${x.anonimo?'Anônimo':DB.esc(x.nome)}</strong><span>${x.quando}</span></div>
+          <p>${DB.esc(x.texto)}</p>
           ${orados.includes(x.id)
             ? `<span class="badge verde"><i class="bi bi-check2"></i> Equipe orou</span>`
             : `<button class="acao-btn roxo" onclick="marcarOrado('${x.id}');navegar('proposito')">Orei por esse pedido</button>`}
