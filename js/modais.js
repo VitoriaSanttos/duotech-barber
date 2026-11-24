@@ -86,9 +86,6 @@ function _htmlModalNovoAgendamento(){
         <label>Profissional</label>
         <select id="agd-barbeiro">
           <option value="">Sem preferência</option>
-          <option value="1">Thiago Prado</option>
-          <option value="2">Marcus Alves</option>
-          <option value="3">Pedro Oliveira</option>
         </select>
       </div>
       <div class="campo">
@@ -131,7 +128,16 @@ function _htmlModalNovoAgendamento(){
     </div>
   </div>`;
 }
+/* Preenche os selects de profissional com a equipe ATIVA (Configurações) */
+function _preencherProfissionais(selId){
+  const sel = document.getElementById(selId); if(!sel) return;
+  const atual = sel.value;
+  sel.innerHTML = '<option value="">Sem preferência</option>' +
+    obterBarbeiros().filter(b=>b.ativo !== false).map(b=>`<option value="${DB.esc(b.id)}">${DB.esc(b.nome)}</option>`).join('');
+  if([...sel.options].some(o=>o.value===atual)) sel.value = atual;
+}
 function abrirModalNovoAgendamento(){
+  _preencherProfissionais('agd-barbeiro');
   /* Pré-preenche data de hoje */
   const inp = document.getElementById('agd-data');
   if(inp && !inp.value) inp.value = DB.hojeISO();
@@ -253,14 +259,7 @@ function _recalcPDV(){
   document.getElementById('pdv-total').textContent = DB.moeda(restante) + ' (restante)';
 }
 function _finalizarAtendimento(){
-  const nome = document.getElementById('pdv-cliente-nome').textContent;
-  const valor = parseFloat(document.getElementById('pdv-total').textContent.replace(/[^\d,]/g,'').replace(',','.')) || 0;
-  const sel = (document.querySelector('.pgto-btn.sel')?.textContent || 'Pix').trim().toLowerCase();
-  const forma = sel.startsWith('créd') ? 'credito' : sel.startsWith('déb') ? 'debito' : sel.startsWith('din') ? 'dinheiro' : 'pix';
-  const servicos = [...document.querySelectorAll('#pdv-itens .pdv-row span:first-child')].map(e=>e.textContent).join(' + ');
-  if(typeof registrarNoCaixa==='function' && valor>0 && !registrarNoCaixa(`${nome} · ${servicos}`, forma, valor)) return;
-  DB.toast('Atendimento finalizado e lançado no caixa','sucesso');
-  if(window._telaAtual==='caixa') navegar('caixa');
+  DB.toast('Atendimento finalizado! 🎉','sucesso');
   fecharModal('modal-pdv');
 }
 function _bindModalPDV(){
@@ -362,9 +361,6 @@ function _htmlModalFila(){
         <label>Profissional preferido</label>
         <select id="fila-barbeiro">
           <option value="">Sem preferência</option>
-          <option value="1">Thiago Prado</option>
-          <option value="2">Marcus Alves</option>
-          <option value="3">Pedro Oliveira</option>
         </select>
       </div>
       <button class="btn-modal primario" onclick="_adicionarFila()">
@@ -375,6 +371,7 @@ function _htmlModalFila(){
   </div>`;
 }
 function abrirModalFila(){
+  _preencherProfissionais('fila-barbeiro');
   _abrirModal('modal-fila');
 }
 function _adicionarFila(){

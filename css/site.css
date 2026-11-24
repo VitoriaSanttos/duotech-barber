@@ -1,0 +1,96 @@
+/* DuoTech Barber · site.css (site de apresentação e link da bio) */
+:root{--fundo:#0B0B0B;--card:#161513;--card2:#111;--ouro-card:#14120D;--linha:#2A2720;--linha2:#1E1E1E;--forte:#3A3426;
+  --ouro:#C9A84C;--ouro-claro:#E4CF8E;--texto:#F2EFE8;--texto2:#A8A297;--texto3:#6F6A61;--letreiro:'Cinzel','Times New Roman',serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--fundo);color:var(--texto);font-family:'Inter',system-ui,sans-serif;line-height:1.5}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.cx{max-width:1200px;margin:0 auto;padding:0 24px}
+.rotulo{font-size:12px;letter-spacing:.24em;color:var(--ouro);font-weight:600;text-transform:uppercase}
+h1,h2{font-family:var(--letreiro);font-weight:700;line-height:1.1}
+h2{font-size:clamp(28px,4vw,38px)}
+.sub{color:var(--texto2);font-size:16px;line-height:1.6}
+.btn{min-height:52px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 24px;border-radius:14px;font-size:16px;font-weight:700}
+.btn-ouro{background:var(--ouro);color:#111}
+.btn-linha{border:1px solid var(--forte);color:var(--texto);font-weight:600}
+.btn-ouro-linha{border:1px solid var(--ouro);color:var(--ouro-claro)}
+.btn:hover{opacity:.9}
+
+/* topo */
+.topo{border-bottom:1px solid var(--linha2);position:sticky;top:0;background:rgba(11,11,11,.92);backdrop-filter:blur(8px);z-index:10}
+.topo .cx{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding-top:12px;padding-bottom:12px}
+.marca{display:flex;align-items:center;gap:12px}
+.marca img{width:30px;height:42px;object-fit:contain}
+.marca b{font-family:var(--letreiro);font-size:17px;letter-spacing:.08em;display:block}
+.marca span{font-size:10px;letter-spacing:.42em;color:var(--ouro);display:block}
+.menu{display:flex;flex-wrap:wrap;align-items:center;gap:4px 20px;font-size:14px}
+.menu a{color:#D8D3C8;min-height:44px;display:flex;align-items:center}
+.menu .btn{min-height:44px;padding:0 18px;font-size:14px;color:#111}
+@media (max-width:760px){.menu a:not(.btn){display:none}}
+
+/* seções */
+.heroi{padding:64px 0 56px}
+.heroi .cx{display:flex;flex-wrap:wrap;gap:40px;align-items:center}
+.heroi .txt{flex:1 1 420px;display:flex;flex-direction:column;gap:20px}
+.heroi h1{font-size:clamp(38px,6vw,58px)}
+.heroi .foto{flex:1 1 340px;min-height:380px;border-radius:24px;border:1px solid var(--linha);background:var(--card) center/cover no-repeat;display:flex;align-items:center;justify-content:center}
+.heroi .foto img{width:58%;max-width:300px;opacity:.95}
+.acoes{display:flex;flex-wrap:wrap;gap:12px}
+.miudo{font-size:13px;color:var(--texto3)}
+.faixa{background:var(--ouro-card);border-top:1px solid var(--forte);border-bottom:1px solid var(--forte)}
+.secao{padding:60px 0}
+.secao .cab{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:28px}
+.secao .cab>div{display:flex;flex-direction:column;gap:10px;max-width:640px}
+.grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.plano{background:var(--card);border:1px solid var(--linha);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:10px}
+.plano.top{border:2px solid var(--ouro);background:#1D1A12}
+.plano .fita{align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.08em;background:var(--ouro);color:#111;border-radius:6px;padding:3px 8px}
+.plano .n{font-size:16px;font-weight:600}
+.plano .v{font-family:var(--letreiro);font-size:30px;font-weight:700;color:var(--ouro-claro)}
+.plano .v small{font-family:Inter,sans-serif;font-size:14px;color:var(--texto2);font-weight:500}
+.plano ul{list-style:none;font-size:14px;color:var(--texto2);display:flex;flex-direction:column;gap:4px}
+.servicos{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0 40px}
+.serv{display:flex;align-items:baseline;gap:12px;padding:14px 0;border-bottom:1px solid var(--linha)}
+.serv b{font-weight:600}
+.serv i{flex:1;border-bottom:1px dotted var(--forte);transform:translateY(-4px)}
+.serv span{font-size:13px;color:var(--texto2)}
+.serv em{font-style:normal;font-weight:700;color:var(--ouro-claro);min-width:84px;text-align:right}
+.escuro2{background:var(--card2);border-top:1px solid var(--linha2);border-bottom:1px solid var(--linha2)}
+.lado{display:flex;flex-wrap:wrap;gap:40px;align-items:center}
+.lado>*{flex:1 1 380px;min-width:0}
+.lado .txt{display:flex;flex-direction:column;gap:18px}
+.precos{display:flex;flex-wrap:wrap;gap:28px}
+.precos span{display:flex;flex-direction:column;gap:2px;color:var(--texto2);font-size:14px}
+.precos b{font-size:22px;color:var(--ouro-claro)}
+.antes-depois{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.antes-depois div{height:320px;border-radius:18px;border:1px dashed var(--forte);background:var(--card);display:flex;align-items:center;justify-content:center;text-align:center;color:var(--texto3);font-size:13px;padding:16px}
+.barb{background:var(--card);border:1px solid var(--linha);border-radius:18px;overflow:hidden}
+.barb .f{height:240px;background:#131210;display:flex;align-items:center;justify-content:center;font-family:var(--letreiro);font-size:56px;color:var(--ouro)}
+.barb .f img{width:100%;height:100%;object-fit:cover}
+.barb .t{padding:18px;display:flex;flex-direction:column;gap:4px}
+.barb .t b{font-size:18px}
+.barb .t span{font-size:14px;color:var(--texto2)}
+.bloco{border:1px solid var(--forte);border-radius:24px;padding:36px;background:var(--card);display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center}
+.bloco>div{display:flex;flex-direction:column;gap:10px;max-width:640px}
+.horas{list-style:none;display:flex;flex-direction:column;gap:6px;font-size:15px;color:#D8D3C8}
+.horas li{display:flex;justify-content:space-between;gap:20px;max-width:340px;border-bottom:1px solid var(--linha2);padding-bottom:6px}
+.mapa{min-height:300px;border-radius:20px;overflow:hidden;border:1px solid var(--linha);background:var(--card)}
+.mapa iframe{width:100%;height:100%;min-height:300px;border:0;filter:grayscale(.3) contrast(1.05)}
+.rodape{border-top:1px solid var(--linha2);padding:20px 0 32px;font-size:12px;color:var(--texto3)}
+.rodape .cx{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+
+/* link da bio */
+.bio{max-width:480px;margin:0 auto;padding:40px 20px 32px;min-height:100vh;display:flex;flex-direction:column;gap:12px}
+.bio .cab{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;margin-bottom:16px}
+.bio .selo{width:104px;height:104px;border-radius:50%;border:1.5px solid var(--ouro);display:flex;align-items:center;justify-content:center;background:var(--ouro-card)}
+.bio .selo img{width:46px;height:64px;object-fit:contain}
+.bio h1{font-size:22px;letter-spacing:.06em}
+.bio .tipo{font-size:10px;letter-spacing:.42em;color:var(--ouro);margin-top:-6px}
+.bio .desc{font-size:14px;color:var(--texto2);line-height:1.5}
+.bio .principal{min-height:58px;border-radius:16px;font-size:16px}
+.bio .link{min-height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 18px;border-radius:16px;background:var(--card);border:1px solid var(--linha)}
+.bio .link b{font-size:15px;font-weight:600;display:block}
+.bio .link small{font-size:12px;color:var(--texto2)}
+.bio .link::after{content:'›';font-size:24px;color:var(--ouro)}
+.bio .pe{margin-top:auto;padding-top:24px;text-align:center;font-size:12px;color:var(--texto3)}

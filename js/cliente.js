@@ -45,6 +45,7 @@ function criarApiReal(){
   }
   return {
     carregar: () => rpc('link_publico', { p_slug: SLUG }),
+    site: () => rpc('site_barbearia', { p_host: location.hostname, p_slug: SLUG }),
     horarios: async (servico, dia, barbeiro) => {
       const r = await rpc('link_horarios', { p_slug: SLUG, p_servico: servico, p_data: dia, p_barbeiro: barbeiro || null });
       return (r || []).map(String);
@@ -54,9 +55,11 @@ function criarApiReal(){
     sair: (token) => rpc('cliente_sair', { p_token: token }).catch(() => {}),
     painel: (token) => rpc('cliente_painel', { p_slug: SLUG, p_token: token }),
     agendar: (token, servico, inicio, barbeiro) => rpc('link_agendar', { p_slug: SLUG, p_token: token, p_servico: servico, p_inicio: inicio, p_barbeiro: barbeiro || null }),
+    agendarRapido: (d) => rpc('link_agendar_rapido', { p_slug: SLUG, p_nome: d.nome, p_whatsapp: d.wa, p_servico: d.servico, p_inicio: d.inicio, p_barbeiro: d.barbeiro || null }),
     resgatar: (token, rec) => rpc('cliente_resgatar', { p_slug: SLUG, p_token: token, p_recompensa: rec }),
     assinar: (token, plano) => rpc('cliente_assinar_plano', { p_slug: SLUG, p_token: token, p_plano: plano }),
     informarPagamento: (token) => rpc('cliente_informar_pagamento_plano', { p_slug: SLUG, p_token: token }),
+    produtos: () => rpc('link_produtos', { p_slug: SLUG }).catch(() => []),
   };
 }
 
@@ -106,7 +109,7 @@ function criarApiDemo(){
           dias_abertos_link: 30,
           pix_tipo: P.pix_tipo, pix_chave: P.pix_chave, pix_nome: P.pix_nome || (P.nome + ' ' + P.tipo), pix_cidade: P.pix_cidade },
         servicos: SERVICOS, planos: PLANOS, recompensas: RECOMPENSAS,
-        barbeiros: BARBEIROS.map(b => ({ ...b, foto_url: fotos[b.id] || null })),
+        barbeiros: obterBarbeiros().filter(b=>b.ativo !== false && b.aparece_no_link !== false).map(b => ({ ...b, foto_url: b.foto_url || fotos[b.id] || null })),
       };
     },
     async horarios(servicoId, dia, barbeiro){
@@ -123,6 +126,14 @@ function criarApiDemo(){
         if (!ocupado(iso, barbeiro)) lista.push(iso);
       }
       return lista;
+    },
+    async agendarRapido(d){                       // sem conta: só nome e WhatsApp
+      const wa = fone(d.wa);
+      if ((d.nome || '').trim().length < 2) return { erro: 'Digite seu nome.' };
+      if (wa.length < 10 || wa.length > 11) return { erro: 'Digite seu WhatsApp com DDD.' };
+      const cl = ler('clientes', []); let c = cl.find(x => x.wa === wa);
+      if (!c) { c = { id: 'c' + Date.now(), nome: d.nome.trim(), wa, senha: null }; cl.push(c); gravar('clientes', cl); }
+      return this.agendar('demo-' + c.id, d.servico, d.inicio, d.barbeiro);
     },
     async cadastrar(d){
       const wa = fone(d.wa);
@@ -159,7 +170,10 @@ function criarApiDemo(){
       if (ag.filter(a => a.cliente === c.id && a.inicio >= agora()).length >= 3)
         return { erro: 'Você já tem 3 horários marcados. Fale com a barbearia para marcar mais.' };
       if (ocupado(inicio, barbeiro)) return { erro: 'Esse horário acabou de ser ocupado. Escolha outro.' };
-      const b = BARBEIROS.find(x => x.id === barbeiro) || BARBEIROS[Math.floor(Math.random() * BARBEIROS.length)];
+      const equipeAtiva = obterBarbeiros().filter(x=>x.ativo !== false && x.aparece_no_link !== false);
+      if (barbeiro && !equipeAtiva.some(x => x.id === barbeiro)) return { erro: 'Esse profissional não está mais disponível. Escolha outro.' };
+      const b = equipeAtiva.find(x => x.id === barbeiro) || equipeAtiva[0];
+      if(!b) return { erro: 'No momento não há profissionais disponíveis para agendamento.' };
       ag.push({ cliente: c.id, servico: s.nome, inicio, barbeiro: b.id, barbeiro_nome: b.nome, status: 'agendado' });
       gravar('agend', ag);
       return { ok: true, servico: s.nome, inicio, barbeiro: b.nome };
@@ -192,6 +206,11 @@ function criarApiDemo(){
       const pl = ler('planos', {}); if (!pl[c.id]) return { erro: 'Você não tem plano para pagar.' };
       pl[c.id].pagamento_informado_em = agora(); gravar('planos', pl);
       return { ok: true };
+    },
+    async produtos(){
+      try { return (JSON.parse(localStorage.getItem('tp_demo_estoque') || '[]') || []).filter(p => Number(p.venda) > 0)
+        .map(p => ({ nome: p.nome, categoria: p.categoria, preco: Number(p.venda), foto_url: p.foto || null, disponivel: Number(p.qtd) > 0 })); }
+      catch(e){ return []; }
     },
   };
 }
@@ -235,21 +254,22 @@ function htmlTopo(){
   return `
   ${CONFIG.MODO_DEMO ? '<div class="faixa-demo">DEMONSTRAÇÃO · nada aqui é enviado para a barbearia</div>' : ''}
   <header class="capa">
-    <div class="coroa">${COROA_SVG(68, P.cor)}</div>
-    <h1>${esc(P.nome)}</h1>
-    <div class="tipo">${esc(P.tipo)}</div>
+    <div class="coroa ${P.logo ? 'tem-logo' : ''}">${P.logo ? `<img class="logo-capa" src="${esc(P.logo)}" alt="Logo ${esc(P.nome)}" onerror="this.replaceWith(document.createRange().createContextualFragment(COROA_SVG(68,'${esc(P.cor)}')))">` : COROA_SVG(68, P.cor)}</div>
+    <h1 class="${P.logo ? 'so-leitor' : ''}">${esc(P.nome)}</h1>
+    <div class="tipo ${P.logo ? 'so-leitor' : ''}">${esc(P.tipo)}</div>
     ${P.slogan ? `<p class="slogan">“${esc(P.slogan)}”</p>` : ''}
     ${P.especialidade ? `<div class="selo"><i class="bi bi-gem"></i>${esc(P.especialidade)}</div>` : ''}
     <div class="atalhos">
       <a class="atalho" href="${DB.linkWa('Oi! Vim pelo app da barbearia.', P.whatsapp)}" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
       ${ig ? `<a class="atalho" href="https://instagram.com/${encodeURIComponent(ig)}" target="_blank" rel="noopener" aria-label="Instagram"><i class="bi bi-instagram"></i></a>` : ''}
       ${P.endereco ? `<a class="atalho" href="https://maps.google.com/?q=${encodeURIComponent(P.endereco)}" target="_blank" rel="noopener" aria-label="Como chegar"><i class="bi bi-geo-alt"></i></a>` : ''}
+      ${window.TPX ? window.TPX.botaoTema() : ''}
     </div>
   </header>
   <div class="saudacao">
     <div class="txt">
       <div class="ola">${E.conta ? esc(E.F.ola(primeiroNome(E.conta.nome))) : esc(E.F.olaAnon)}</div>
-      <div class="sub">${esc(P.boas_vindas || '')}</div>
+      <div class="sub">${esc(String(P.boas_vindas || '').replace(E.F.olaAnon, '').trim())}</div>
     </div>
     ${E.conta && E.painel ? `<button class="pts" data-ir="clube"><i class="bi bi-star-fill"></i>${E.painel.saldo} pts</button>` : ''}
   </div>
@@ -268,6 +288,7 @@ function htmlAgendar(){
   let n = 0; const num = () => String(++n).padStart(2, '0');
 
   return `
+  ${window.TPX ? window.TPX.htmlMais() : ''}
   ${temBarbeiros ? `
   <section class="secao">
     <div class="passo"><span class="num">${num()}</span><h2>${esc(F.passo1)}</h2><span class="linha"></span></div>
@@ -356,11 +377,44 @@ function atualizarHoras(){
 }
 
 async function confirmarAgendamento(){
-  if (!E.conta) { E.depoisDoLogin = confirmarAgendamento; abrirLogin(E.F.pedirLogin); return; }
+  if (!E.conta) { abrirDadosRapidos(); return; }               // sem conta: só nome e WhatsApp
   const r = await API.agendar(E.conta.token, E.servico, E.hora, E.barbeiro).catch(e => ({ erro: e.message }));
-  if (r && r.sair) { salvarConta(null); E.depoisDoLogin = confirmarAgendamento; abrirLogin(r.erro); return; }
+  if (r && r.sair) { salvarConta(null); abrirDadosRapidos(); return; }
   if (!r || r.erro) { toast(r ? r.erro : 'Não deu certo.'); carregarHoras(); return; }
+  await mostrarAgendado(r, E.conta.nome);
+}
+
+/* agendar sem conta: a barbearia só precisa do nome e do WhatsApp */
+const lerDados = () => { try { return JSON.parse(localStorage.getItem('barber_dados') || '{}'); } catch(e){ return {}; } };
+function abrirDadosRapidos(){
+  const d = lerDados();
+  abrirFolha(`<button class="fechar" data-fechar aria-label="Fechar"><i class="bi bi-x"></i></button>
+    <h3>Seus dados</h3>
+    <p style="margin-bottom:14px;color:var(--texto2)">É só para a barbearia saber quem vem. Não precisa criar conta.</p>
+    <form id="formRapido" novalidate>
+      <div class="erro" id="erroRapido"></div>
+      <div class="campo"><label for="rNome">Seu nome</label><input id="rNome" autocomplete="name" maxlength="80" value="${esc(d.nome || '')}"></div>
+      <div class="campo"><label for="rWa">Seu WhatsApp</label><input id="rWa" type="tel" inputmode="numeric" autocomplete="tel" placeholder="(16) 99999-9999" value="${esc(d.wa ? mascaraWa(d.wa) : '')}"></div>
+      <button class="btn btn-preto btn-largo" type="submit"><i class="bi bi-check-lg"></i> Confirmar horário</button>
+    </form>
+    ${E.dados.empresa.pontos_ativo ? `<p class="aviso">Quer juntar pontos no ${esc(E.P.clube_nome)}? <a class="link-btn" href="#" data-acao="login">Crie sua conta</a></p>` : ''}`);
+}
+async function enviarRapido(form){
+  const erro = form.querySelector('#erroRapido'), btn = form.querySelector('button[type=submit]');
+  const nome = form.querySelector('#rNome').value.trim(), wa = form.querySelector('#rWa').value;
+  erro.classList.remove('on');
+  if (nome.length < 2) { erro.textContent = 'Digite seu nome.'; erro.classList.add('on'); return; }
+  if (String(wa).replace(/\D/g, '').length < 10) { erro.textContent = 'Digite seu WhatsApp com DDD.'; erro.classList.add('on'); return; }
+  btn.disabled = true;
+  const r = await API.agendarRapido({ nome, wa, servico: E.servico, inicio: E.hora, barbeiro: E.barbeiro }).catch(e => ({ erro: e.message }));
+  btn.disabled = false;
+  if (!r || r.erro) { erro.textContent = r ? r.erro : 'Não deu certo.'; erro.classList.add('on'); if (r && /ocupado/i.test(r.erro)) carregarHoras(); return; }
+  try { localStorage.setItem('barber_dados', JSON.stringify({ nome, wa: String(wa).replace(/\D/g, '') })); } catch(e){}
+  await mostrarAgendado(r, nome);
+}
+async function mostrarAgendado(r, nome){
   const s = E.dados.servicos.find(x => x.id === E.servico);
+  const msg = `Oi! Acabei de agendar pelo app: ${r.servico}${r.barbeiro ? ' com ' + r.barbeiro : ''}, ${dataLonga(r.inicio)} às ${hora(r.inicio)}. Nome: ${nome}`;
   abrirFolha(`
     <div class="sucesso">
       <div class="grande"><i class="bi bi-check-circle-fill"></i></div>
@@ -368,9 +422,9 @@ async function confirmarAgendamento(){
       <p><b>${esc(r.servico)}</b>${r.barbeiro ? ' com ' + esc(r.barbeiro) : ''}<br>${esc(dataLonga(r.inicio))} às ${hora(r.inicio)}</p>
       ${s && s.preco_a_partir ? '<p class="aviso">O valor final é combinado na cadeira.</p>' : ''}
       ${E.dados.empresa.pontos_ativo ? `<p class="aviso"><i class="bi bi-star-fill" style="color:var(--ouro)"></i> Esse atendimento vale pontos no ${esc(E.P.clube_nome)}.</p>` : ''}
-      <a class="btn btn-wa btn-largo" style="margin-top:16px" target="_blank" rel="noopener"
-         href="${DB.linkWa(`Oi! Acabei de marcar ${r.servico} para ${dataLonga(r.inicio)} às ${hora(r.inicio)} pelo app. Nome: ${E.conta.nome}`, E.P.whatsapp)}">
-         <i class="bi bi-whatsapp"></i> Avisar a barbearia</a>
+      ${E.P.whatsapp ? `<p class="aviso" style="margin-top:14px">Seu horário já está reservado. Toque abaixo para mandar a confirmação no WhatsApp da barbearia.</p>
+      <a class="btn btn-wa btn-largo" style="margin-top:8px" target="_blank" rel="noopener" href="${DB.linkWa(msg, E.P.whatsapp)}">
+         <i class="bi bi-whatsapp"></i> Confirmar no WhatsApp</a>` : ''}
       <button class="btn btn-borda btn-largo" style="margin-top:8px" data-fechar>Fechar</button>
     </div>`);
   E.servico = null; E.dia = null; E.hora = null; E.horas = null;
@@ -383,8 +437,9 @@ async function confirmarAgendamento(){
 function htmlPlanos(){
   const planos = E.dados.planos;
   return `
-  <h2 class="titulo-aba">Planos Gold</h2>
+  <h2 class="titulo-aba">${EH_THIAGO ? 'Planos Gold' : 'Planos'}</h2>
   <p class="sub-aba">Pague por mês e venha quantas vezes o plano permitir.</p>
+  ${window.TPX ? window.TPX.htmlCalc() : ''}
   ${E.painel && E.painel.plano ? `<div class="lista" style="border:2px solid var(--ouro)"><h4>Seu plano</h4>${htmlMeuPlano(E.painel.plano)}</div>` : ''}
   <div class="planos">
   ${planos.map(p => {
@@ -524,10 +579,10 @@ function htmlClube(){
   <h2 class="titulo-aba">${esc(P.clube_nome)}</h2>
   <p class="sub-aba">${esc(E.F.clubeConvite)}</p>
   <div class="cartao">
-    <div class="marca-dagua">${COROA_SVG(150, 'transparent', P.cor)}</div>
+    <div class="marca-dagua">${P.simbolo ? `<img src="${esc(P.simbolo)}" alt="" style="height:170px;width:auto">` : COROA_SVG(150, 'transparent', P.cor)}</div>
     <div class="topo-c">
       <div><div class="clube">${esc(P.clube_nome)}</div><div class="membro">${logado ? esc(E.painel.cliente.nome) : 'Seu nome aqui'}</div></div>
-      ${COROA_SVG(34, P.cor)}
+      ${P.simbolo ? `<img src="${esc(P.simbolo)}" alt="" style="height:44px;width:auto">` : COROA_SVG(34, P.cor)}
     </div>
     <div class="saldo">${saldo}<small>PONTOS</small></div>
     <div class="regra">Cada ${moeda(1 / ppr).replace(',00', '')} em serviços = 1 ponto</div>
@@ -684,6 +739,7 @@ function desenhar(){
   document.querySelectorAll('.aba').forEach(a => a.classList.toggle('ativa', a.dataset.aba === E.aba));
 }
 function irPara(aba){ E.aba = aba; desenhar(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+window.TP = { E, API, desenhar, irPara, abrirFolha, fecharFolha, toast, esc, moeda };
 
 document.addEventListener('click', async ev => {
   const el = ev.target.closest('button, [data-fechar]'); if (!el) return;
@@ -726,14 +782,21 @@ document.addEventListener('click', async ev => {
   }
 });
 $('#fundoFolha').addEventListener('click', ev => { if (ev.target.id === 'fundoFolha') fecharFolha(); });
-document.addEventListener('submit', ev => { if (ev.target.id === 'formConta') { ev.preventDefault(); enviarConta(ev.target); } });
-document.addEventListener('input', ev => { if (ev.target.id === 'cWa') ev.target.value = mascaraWa(ev.target.value); });
+document.addEventListener('submit', ev => {
+  if (ev.target.id === 'formConta') { ev.preventDefault(); enviarConta(ev.target); }
+  if (ev.target.id === 'formRapido') { ev.preventDefault(); enviarRapido(ev.target); }
+});
+document.addEventListener('input', ev => { if (ev.target.id === 'cWa' || ev.target.id === 'rWa') ev.target.value = mascaraWa(ev.target.value); });
 
 /* ─────────────────────────────────────────────
    11. INÍCIO
 ───────────────────────────────────────────── */
 (async function iniciar(){
   try {
+    const site = API.site ? await API.site().catch(() => null) : null;     // telas ligadas pela DuoTech
+    const mod = (site && site.modulos) || {};
+    if (site && site.liberada === false) throw new Error('O agendamento online está pausado no momento. Fale com a barbearia pelo WhatsApp.');
+    if (mod.link === false) throw new Error('O agendamento online não está disponível. Fale com a barbearia pelo WhatsApp.');
     const dados = await API.carregar();
     if (!dados || dados.erro) throw new Error(dados ? dados.erro : 'Barbearia não encontrada.');
     E.dados = dados;
@@ -741,25 +804,31 @@ document.addEventListener('input', ev => { if (ev.target.id === 'cWa') ev.target
     // personalidade: o que vem do banco (ou do painel, na demonstração)
     const nomeCompleto = String(emp.nome || '');
     const m = nomeCompleto.match(/^(.*?)\s+(Barbearia|Barber\s*Shop|Barbershop)$/i);
+    const jaDiz = /barbearia|barber/i.test(nomeCompleto);             // "Barbearia do Zeca" não repete "Barbearia"
     E.P = {
-      nome: m ? m[1] : nomeCompleto, tipo: m ? m[2] : 'Barbearia',
+      nome: m ? m[1] : nomeCompleto, tipo: m ? m[2] : (jaDiz ? '' : 'Barbearia'),
       slogan: emp.slogan, boas_vindas: emp.boas_vindas, tom_voz: emp.tom_voz || 'descontraido',
       clube_nome: emp.clube_nome || 'Clube de pontos', especialidade: emp.especialidade,
       cor: emp.cor_principal || '#C9A84C', whatsapp: emp.whatsapp || CONFIG.BARBEARIA_WA,
       instagram: emp.instagram, endereco: emp.endereco,
+      logo: emp.logo_url || (CONFIG.MODO_DEMO ? lerLogo() : '') || CONFIG.LOGO || '',
+      simbolo: CONFIG.SIMBOLO || '',
     };
     E.F = FALAS[E.P.tom_voz] || FALAS.descontraido;
     document.documentElement.style.setProperty('--ouro', E.P.cor);
     document.title = `${nomeCompleto} · Agende seu horário`;
     if (!dados.empresa.pontos_ativo) document.querySelector('[data-aba="clube"]').style.display = 'none';
-    if (!dados.planos.length) document.querySelector('[data-aba="planos"]').style.display = 'none';
+    if (!dados.planos.length || mod.planos === false) document.querySelector('[data-aba="planos"]').style.display = 'none';
+    if (mod.fidelidade === false) document.querySelector('[data-aba="clube"]').style.display = 'none';
     const aba = new URLSearchParams(location.search).get('aba');
     if (['agendar','planos','clube','conta'].includes(aba)) E.aba = aba;
+    if (mod.planos === false && E.aba === 'planos') E.aba = 'agendar';
+    if (mod.fidelidade === false && E.aba === 'clube') E.aba = 'agendar';
     await atualizarPainel();
     desenhar();
   } catch(e) {
     $('#pagina').innerHTML = `<div style="padding:60px 24px;text-align:center"><h2 style="font-family:var(--letreiro);text-transform:uppercase">Ops</h2>
-      <p style="color:#666;margin-top:8px">${esc(e.message)}</p></div>`;
+      <p style="color:var(--texto2);margin-top:8px">${esc(e.message)}</p></div>`;
   }
 })();
 

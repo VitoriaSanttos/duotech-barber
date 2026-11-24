@@ -1,0 +1,15 @@
+SQL DO DUOTECH BARBER — O QUE ESTÁ AQUI E O QUE FALTA
+
+No GitHub:
+  schema-barber.sql           base (v1/v2)
+  barber-v3-thiago-prado.sql  v3
+  dados-da-barbearia.sql      dados do Thiago (v3)
+  barber-v13.sql              v13 (último)
+
+FALTAM no GitHub os SQL das versões 4 a 12 (equipe em `profissionais`,
+plataforma DuoTech, módulos, sites, fechar atendimento, saldos...).
+Eles já foram rodados no Supabase: o banco de verdade está certo.
+Se tiver os arquivos, suba aqui para o histórico ficar completo.
+
+A estrutura atual do banco (lida direto do Supabase em 24/11/2026) está em
+ESTRUTURA-DO-BANCO.md.

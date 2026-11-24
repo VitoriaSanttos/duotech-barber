@@ -40,6 +40,10 @@ a{color:inherit}
 .capa::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,transparent,var(--ouro),transparent)}
 .capa>*{position:relative}
 .capa .coroa{display:inline-block;margin-bottom:12px;filter:drop-shadow(0 6px 18px rgba(201,168,76,.35))}
+.capa .logo-capa{display:block;max-width:150px;max-height:110px;object-fit:contain;margin:0 auto}
+.capa .coroa.tem-logo{filter:none;margin-bottom:4px}
+.capa .coroa.tem-logo .logo-capa{max-width:210px;max-height:200px}
+.so-leitor{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .capa h1{font-family:var(--letreiro);font-weight:700;font-size:2rem;letter-spacing:.08em;text-transform:uppercase;line-height:1}
 .capa .tipo{font-family:var(--letreiro);color:var(--ouro);font-size:.78rem;letter-spacing:.42em;text-transform:uppercase;margin-top:6px;padding-left:.42em}
 .capa .slogan{color:rgba(255,255,255,.75);font-size:.9rem;margin-top:12px;font-style:italic}
@@ -233,3 +237,79 @@ a{color:inherit}
   body{background:#e9e9e6}
   .pagina{box-shadow:0 0 60px rgba(0,0,0,.08)}
 }
+
+/* ═══════════════════════════════════════════════
+   v13 · visual novo: títulos em Cinzel, tema escuro (padrão) e claro
+═══════════════════════════════════════════════ */
+:root{--letreiro:'Cinzel','Times New Roman',serif}
+html[data-tema="escuro"]{
+  --fundo:#0B0B0B; --branco:#161513; --linha:#2A2720; --texto:#F2EFE8; --texto2:#A8A297; --fraco:#8A8478;
+  --preto:#1D1A12; --sombra:none; --ouro-fundo:rgba(201,168,76,.12); color-scheme:dark;
+}
+html[data-tema="escuro"] body{background:var(--fundo)}
+html[data-tema="escuro"] .capa,
+html[data-tema="escuro"] .abas{background:#0B0B0B}
+html[data-tema="escuro"] .abas{border-top:1px solid var(--linha)}
+html[data-tema="escuro"] .lista,
+html[data-tema="escuro"] .caixa,
+html[data-tema="escuro"] .plano,
+html[data-tema="escuro"] .servico,
+html[data-tema="escuro"] .dia,
+html[data-tema="escuro"] .hora,
+html[data-tema="escuro"] .chip{border:1px solid var(--linha)}
+html[data-tema="escuro"] .chip.sel,
+html[data-tema="escuro"] .servico.sel,
+html[data-tema="escuro"] .dia.sel,
+html[data-tema="escuro"] .alternar button.sel{border:1.5px solid var(--ouro)}
+html[data-tema="escuro"] .barbeiro .foto{border:1px solid var(--linha)}
+html[data-tema="escuro"] .barbeiro.sel .foto{box-shadow:0 0 0 2px var(--fundo),0 0 0 4px var(--ouro)}
+html[data-tema="escuro"] .campo input,
+html[data-tema="escuro"] .campo select{background:#0F0F0F;color:var(--texto);border-color:var(--linha)}
+html[data-tema="escuro"] .campo input:focus{background:#0F0F0F}
+html[data-tema="escuro"] .plano.top{border:2px solid var(--ouro)}
+html[data-tema="escuro"] .saudacao{background:var(--branco);border-bottom-color:var(--linha)}
+html[data-tema="escuro"] .folha{border-top:1px solid var(--linha)}
+.capa h1{text-transform:none;letter-spacing:.06em}
+
+/* atalhos "mais da barbearia" */
+.mais{padding-bottom:0}
+.mais-grade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.mais-item{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;background:var(--branco);border:1px solid var(--linha);border-radius:16px;padding:14px;min-height:96px;box-shadow:var(--sombra)}
+.mais-item i{font-size:1.3rem;color:var(--ouro);margin-bottom:2px}
+.mais-item b{font-size:.92rem}
+.mais-item span{font-size:.76rem;color:var(--texto2)}
+
+/* conta dos planos */
+.calc{margin:10px 16px 4px;background:var(--branco);border:1px solid var(--linha);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--sombra)}
+.calc-op{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.calc-op button{min-height:44px;border-radius:10px;border:1px solid var(--linha);font-weight:800;font-size:1rem;background:var(--fundo)}
+.calc-op button.sel{background:var(--ouro);border-color:var(--ouro);color:#111}
+.calc-l{display:flex;justify-content:space-between;gap:10px;font-size:.84rem;color:var(--texto2)}
+.calc-r{border-radius:12px;padding:10px 12px;font-size:.88rem;background:var(--fundo);border:1px solid var(--linha)}
+.calc-r.ok{background:var(--ouro-fundo);border-color:var(--ouro)}
+
+/* folhas extras */
+.btn-contorno{border:1px solid var(--ouro);color:var(--texto);background:transparent}
+.passos-x{list-style:none;counter-reset:p;margin:16px 0;display:flex;flex-direction:column;gap:12px}
+.passos-x li{counter-increment:p;display:grid;grid-template-columns:32px 1fr;column-gap:12px}
+.passos-x li::before{content:counter(p);grid-row:span 2;width:32px;height:32px;border-radius:50%;border:1px solid var(--ouro);color:var(--ouro);display:grid;place-items:center;font-family:var(--letreiro);font-weight:700}
+.passos-x b{font-size:.95rem}
+.passos-x span{font-size:.84rem;color:var(--texto2)}
+.cursos-x{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.curso-x{border:1px solid var(--linha);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.curso-x span{font-size:.84rem;color:var(--texto2)}
+.curso-x small{font-size:.78rem;color:var(--ouro)}
+.curso-x .btn{margin-top:4px}
+.produtos-x{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+.produto-x{border:1px solid var(--linha);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.produto-x .foto{aspect-ratio:1;border-radius:10px;background:#F2EFE8;display:grid;place-items:center;overflow:hidden;color:#B5AEA1;font-size:1.6rem}
+.produto-x .foto img{width:100%;height:100%;object-fit:cover}
+.produto-x b{font-size:.86rem;line-height:1.3}
+.produto-x .preco{font-weight:800;color:var(--ouro)}
+.produto-x .btn{min-height:40px;padding:8px}
+.produto-x .esgotado{font-size:.78rem;color:var(--fraco);text-align:center;padding:10px 0}
+html[data-tema="escuro"] .btn-preto{background:transparent;border:1px solid var(--ouro);color:var(--texto)}
+/* topo limpo: sem as listras diagonais atrás do logo */
+.capa::before{display:none}
+.capa{padding:30px 20px 24px}
+.capa .coroa.tem-logo .logo-capa{max-width:170px;max-height:160px}

@@ -56,6 +56,31 @@ const BARBEIROS = [
   {id:'b3', nome:'Pedro Oliveira', especialidade:'Pigmentação & risquinho',  iniciais:'PO'},
 ];
 
+/* Equipe editável pelo painel.
+   - Modo demonstração: fica no navegador (localStorage).
+   - Modo real: o painel carrega a tabela `profissionais` do Supabase para
+     window.EQUIPE (ver js/equipe.js) e todas as telas leem daqui. */
+window.EQUIPE = null;
+const EQUIPE_PADRAO = () => BARBEIROS.map(b => ({...b, ativo:true, aparece_no_link:true, comissao_pct:0, foto_url:null}));
+function iniciaisProfissional(nome){
+  return String(nome||'').trim().split(/\s+/).slice(0,2).map(p=>p[0]||'').join('').toUpperCase() || 'PR';
+}
+function lerEquipeLocal(){
+  let lista;
+  try {
+    const salvos = JSON.parse(localStorage.getItem('tp_demo_barbeiros') || 'null');
+    lista = Array.isArray(salvos) ? salvos : EQUIPE_PADRAO();
+  } catch(e){ lista = EQUIPE_PADRAO(); }
+  const fotos = lerFotos();   // fotos guardadas na versão anterior
+  return lista.map(b => ({...b, foto_url: b.foto_url || fotos[b.id] || null, iniciais: iniciaisProfissional(b.nome)}));
+}
+function obterBarbeiros(){ return window.EQUIPE || lerEquipeLocal(); }
+function salvarBarbeiros(lista){
+  try { localStorage.setItem('tp_demo_barbeiros', JSON.stringify(lista)); return true; }
+  catch(e){ return false; }
+}
+
+
 /* Prêmios do clube (exemplos — a barbearia ajusta) */
 const RECOMPENSAS = [
   {id:'r1', nome:'Risquinho grátis',     pontos:100},
@@ -64,16 +89,27 @@ const RECOMPENSAS = [
   {id:'r4', nome:'Corte grátis',         pontos:900},
 ];
 
-/* Personalidade padrão (frase e boas-vindas são EXEMPLOS: trocar pelas do Thiago) */
+/* Qual barbearia é este site (vem do config.js gerado pelo painel da DuoTech) */
+const EH_THIAGO = !window.CONFIG || !CONFIG.BARBEARIA_SLUG || CONFIG.BARBEARIA_SLUG === 'thiagoprado';
+const NOME_CURTO = String((window.CONFIG && CONFIG.BARBEARIA_NOME) || 'Barbearia')
+  .replace(/^\s*barbearia\s+(d[oae]s?\s+)?/i, '').replace(/\s+barbearia\s*$/i, '').trim() || 'Barbearia';
+
+if (!EH_THIAGO) document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-nav="planos"], [data-aba="planos"]').forEach(el => {
+    el.childNodes.forEach(n => { if (n.nodeType === 3 && /Planos Gold/.test(n.textContent)) n.textContent = n.textContent.replace('Planos Gold', 'Planos'); });
+  });
+});
+
+/* Personalidade padrão (o dono troca em Personalidade) */
 const PERSONALIDADE_PADRAO = {
-  nome: 'Thiago Prado',
+  nome: EH_THIAGO ? 'Thiago Prado' : NOME_CURTO,
   tipo: 'Barbearia',
-  slogan: 'Corte de rei, atendimento de rei.',
-  boas_vindas: 'Escolhe o serviço e garante tua cadeira.',
+  slogan: EH_THIAGO ? 'Corte de rei, atendimento de rei.' : 'Seu estilo em boas mãos.',
+  boas_vindas: EH_THIAGO ? 'Escolhe o serviço e garante tua cadeira.' : 'Escolha o serviço e garanta seu horário.',
   tom_voz: 'descontraido',          // descontraido | classico | premium
-  clube_nome: 'Clube Gold TP',
-  especialidade: 'Especialista em prótese capilar',
-  cor: '#C9A84C',
+  clube_nome: EH_THIAGO ? 'Clube Gold TP' : 'Clube de pontos',
+  especialidade: EH_THIAGO ? 'Especialista em prótese capilar' : '',
+  cor: (window.CONFIG && CONFIG.COR) || '#C9A84C',
   whatsapp: '',                     // preencher com o número da barbearia (só números, com DDD)
   instagram: '',                    // ex.: thiagopradobarbearia
   pontos_por_real: 1,
@@ -117,6 +153,24 @@ function lerPersonalidade(){
 function salvarPersonalidade(p){
   try { localStorage.setItem('tp_demo_personalidade', JSON.stringify(p)); } catch(e){}
 }
+function lerLogo(){ try { return localStorage.getItem('tp_demo_logo') || ''; } catch(e){ return ''; } }
+function salvarLogo(dataUrl){
+  try { dataUrl ? localStorage.setItem('tp_demo_logo', dataUrl) : localStorage.removeItem('tp_demo_logo'); return true; }
+  catch(e){ return false; }
+}
+/* Mostra a logo da barbearia no topo da lateral do painel (ou a coroa padrão) */
+function aplicarLogoPainel(){
+  const caixa = document.getElementById('sidebarLogo'); if(!caixa) return;
+  const logo = lerLogo() || (window.CONFIG && CONFIG.LOGO) || '';
+  caixa.classList.toggle('com-imagem', !!logo);
+  let img = caixa.querySelector('.logo-img'), svg = caixa.querySelector('.logo-svg');
+  if(logo){
+    if(!img){ img = document.createElement('img'); img.className = 'logo-img'; img.alt = 'Logo da barbearia'; caixa.prepend(img); }
+    img.src = logo; if(svg) svg.style.display = 'none';
+  } else {
+    if(img) img.remove(); if(svg) svg.style.display = '';
+  }
+}
 function lerFotos(){
   try { return JSON.parse(localStorage.getItem('tp_demo_fotos') || '{}'); } catch(e){ return {}; }
 }
@@ -126,8 +180,18 @@ function salvarFoto(id, dataUrl){
   catch(e){ return false; }
 }
 
-/* Coroa TP em SVG (mesma da logo) */
-const COROA_SVG = (tam=44, fundo='#C9A84C', traco='#111') => `
+/* Marca da barbearia: coroa TP na Thiago Prado; nas outras, as iniciais do nome */
+const COROA_SVG = (tam=44, fundo='#C9A84C', traco='#111') =>
+  EH_THIAGO ? COROA_TP_SVG(tam, fundo, traco) : EMBLEMA_SVG(NOME_CURTO, tam, fundo, traco);
+const EMBLEMA_SVG = (nome, tam=44, fundo='#C9A84C', traco='#111') => {
+  const pal = String(nome || '').replace(/\b(barbearia|barber ?shop|barbershop|do|da|de|dos|das)\b/gi, ' ').trim().split(/\s+/).filter(Boolean);
+  const ini = (((pal[0] || 'B')[0] || 'B') + ((pal[1] || '')[0] || '')).toUpperCase().replace(/[<>&"']/g, '');
+  return `<svg width="${tam}" height="${tam}" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect width="80" height="80" rx="14" fill="${fundo}"/>
+  <text x="40" y="52" text-anchor="middle" font-family="Oswald,Arial Narrow,Arial,sans-serif" font-weight="700" font-size="${ini.length > 1 ? 32 : 38}" fill="${traco}">${ini}</text></svg>`;
+};
+/* Coroa TP em SVG (mesma da logo do Thiago) */
+const COROA_TP_SVG = (tam=44, fundo='#C9A84C', traco='#111') => `
 <svg width="${tam}" height="${tam}" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <rect width="80" height="80" rx="14" fill="${fundo}"/>
   <path d="M40 10 L28 26 L18 20 L23 38 H57 L62 20 L52 26 Z" fill="${traco}"/>
@@ -137,54 +201,3 @@ const COROA_SVG = (tam=44, fundo='#C9A84C', traco='#111') => `
   <rect x="42" y="44" width="6" height="22" rx="1.5" fill="${traco}"/>
   <path d="M48 44 Q62 44 62 52 Q62 60 48 60 L48 56 Q57 56 57 52 Q57 48 48 48 Z" fill="${traco}"/>
 </svg>`;
-
-/* Números do painel Início (EXEMPLOS para o modo demonstração).
-   Na versão ligada ao banco, cada número vem de uma consulta. */
-const DASH_DEMO = {
-  faturamento_mes: 21480.50, faturamento_mes_passado: 23910.00, acumulado_ano: 158320.75,
-  ocupacao: 41.4, meta_ocupacao: 65,
-  planos_ativos: 96, planos_vendidos_mes: 21, planos_cancelados_mes: 4,
-  ticket_medio: 142.30,
-  comandas_abertas: 3, comandas_outros_dias: 2,
-  /* últimos 6 meses (aba Crescimento) */
-  meses: [
-    {mes:'Jun', fat:19850, novos:31, voltaram:212, ticket:131},
-    {mes:'Jul', fat:21340, novos:28, voltaram:225, ticket:134},
-    {mes:'Ago', fat:22780, novos:35, voltaram:231, ticket:138},
-    {mes:'Set', fat:22100, novos:26, voltaram:238, ticket:139},
-    {mes:'Out', fat:23910, novos:33, voltaram:247, ticket:141},
-    {mes:'Nov', fat:21480, novos:24, voltaram:219, ticket:142.30},
-  ],
-  pix_conferir: [
-    {nome:'Diego M.',   plano:'Barba Ilimitada Gold',         valor:154.00, quando:'hoje, 11:20', disse_que_pagou:true},
-    {nome:'André L.',   plano:'Plano Corte Ilimitado Gold',   valor:160.00, quando:'ontem',       disse_que_pagou:false},
-  ],
-  mensalidade_aberta: [
-    {nome:'Bruno C.',   plano:'Corte e Barba Ilimitado Gold', dias:5, tel:''},
-    {nome:'Felipe R.',  plano:'Barba Ilimitada Gold',         dias:3, tel:''},
-    {nome:'Mateus A.',  plano:'Plano Um Corte no Mês Gold',   dias:1, tel:''},
-  ],
-  estoque_minimo: [
-    {nome:'Pomada efeito matte 70g', atual:2, min:10},
-    {nome:'Óleo para barba',         atual:1, min:3},
-    {nome:'Shampoo antiqueda',       atual:0, min:2},
-    {nome:'Body splash',             atual:1, min:2},
-  ],
-  contratos_pendentes: [
-    {nome:'Thiago Prado',   situacao:'Sem contrato cadastrado'},
-    {nome:'Marcus Alves',   situacao:'Sem contrato cadastrado'},
-    {nome:'Pedro Oliveira', situacao:'Vence em 40 dias'},
-  ],
-};
-
-/* Ocupação média por dia e hora nos últimos 30 dias (%). null = fechado.
-   Linhas: Seg, Ter, Qua, Qui, Sex, Sáb, Dom · Colunas: 07h a 19h */
-const OCUPACAO_DEMO = [
-  [null,12, 15, 18, 14, 35, 38, 72, 55, 16, 33, 70, 18],
-  [ 66, 52, 47, 31, 45, 12, 30, 48, 36, 58, 39, 74, 65],
-  [ 38, 50, 33, 17, 36, 15, 34, 37, 51, 44, 28,null,null],
-  [null,35, 38, 34, 40, 14, 38, 55, 30, 52, 57, 36,null],
-  [ 88, 54, 69, 56, 55, 32, 53, 58, 49, 47, 34, 33, 15],
-  [ 63, 37, 39, 58, 52, 16, 36, 46, 38,null,null,null,null],
-  [null,null,null,null,null,null,null,null,null,null,null,null,null],
-];
