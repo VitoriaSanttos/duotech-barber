@@ -24,6 +24,16 @@ VERSÃO 04 (em andamento) · novo Início e PROPÓSITO
   - Crescimento: mapa de ocupação por dia e hora, com os horários mais cheios
     e mais vazios.
   - Celular: nenhuma tela passa mais da largura (tabelas rolam para o lado).
+  - PROFIT (menu Inteligência), em js/profit.js:
+      Itens: margem de serviços, produtos e planos; margem por categoria (da
+      menor para a maior); "Atenção nestes serviços"; premissas editáveis
+      (comissão do barbeiro e do gerente, cartão, taxa fixa, impostos, taxa dos
+      planos); cada item abre e mostra para onde vai cada real, com preço e
+      insumo editáveis. Tudo recalcula na hora.
+      Ponto de equilíbrio: quanto precisa faturar no mês, quanto sobra em cada
+      plano (assinantes e usos editáveis), custos fixos e lucro estimado.
+    Insumos, quantidades vendidas, assinantes e custos fixos são ESTIMATIVAS:
+    o Thiago precisa conferir com os números dele.
 
 ARQUIVOS
   index.html            Painel da barbearia (dono e barbeiros)

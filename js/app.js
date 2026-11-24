@@ -27,7 +27,7 @@ function navegar(tela, params={}){
 const TITULOS = {
   inicio:'Início', agenda:'Agenda', fila:'Fila de Espera',
   clientes:'Clientes', financeiro:'Financeiro', comissoes:'Comissões',
-  estoque:'Estoque', caixa:'Caixa', fidelidade:'Clube de pontos', planos:'Planos',
+  estoque:'Estoque', caixa:'Caixa', profit:'Profit', fidelidade:'Clube de pontos', planos:'Planos',
   link:'App do cliente', personalizar:'Personalidade', config:'Configurações',
   proposito:'Propósito',
 };
