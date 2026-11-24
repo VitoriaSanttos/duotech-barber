@@ -4,7 +4,8 @@ No GitHub:
   schema-barber.sql           base (v1/v2)
   barber-v3-thiago-prado.sql  v3
   dados-da-barbearia.sql      dados do Thiago (v3)
-  barber-v13.sql              v13 (último)
+  barber-v13.sql              v13
+  barber-v14-gestao.sql       v14 (último): Caixa, Comanda, Meta, Lucro real, Academia e fé no painel
 
 FALTAM no GitHub os SQL das versões 4 a 12 (equipe em `profissionais`,
 plataforma DuoTech, módulos, sites, fechar atendimento, saldos...).
@@ -13,3 +14,14 @@ Se tiver os arquivos, suba aqui para o histórico ficar completo.
 
 A estrutura atual do banco (lida direto do Supabase em 24/11/2026) está em
 ESTRUTURA-DO-BANCO.md.
+
+COMO RODAR A v14
+  1. Supabase > SQL Editor > New query.
+  2. Cole o arquivo barber-v14-gestao.sql inteiro e clique em Run.
+  3. Pode rodar de novo sem medo: ele só acrescenta (não apaga nada da v13).
+O que ele cria: tabelas caixas, empresas_config, metas, metas_historico,
+academia_progresso e academia_parceiros; colunas novas em financeiro
+(cliente_id, itens), servicos (insumo) e empresas (meta_ocupacao); funções
+do caixa, comanda, meta, lucro real, academia e o resumo do Início.
+Não tem pedido de oração: a fé fica só no painel (Palavra do dia,
+Momento da equipe, Meta com propósito, dízimo e versículo no lembrete).

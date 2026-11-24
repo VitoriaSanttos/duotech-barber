@@ -259,8 +259,15 @@ function _recalcPDV(){
   document.getElementById('pdv-total').textContent = DB.moeda(restante) + ' (restante)';
 }
 function _finalizarAtendimento(){
-  DB.toast('Atendimento finalizado! 🎉','sucesso');
+  const nome = document.getElementById('pdv-cliente-nome')?.textContent || 'Cliente';
+  const valor = parseFloat((document.getElementById('pdv-total')?.textContent||'').replace(/[^\d,]/g,'').replace(',','.')) || 0;
+  const sel = (document.querySelector('.pgto-btn.sel')?.textContent || 'Pix').trim().toLowerCase();
+  const forma = sel.startsWith('créd') ? 'credito' : sel.startsWith('déb') ? 'debito' : sel.startsWith('din') ? 'dinheiro' : 'pix';
+  const servicos = [...document.querySelectorAll('#pdv-itens .pdv-row span:first-child')].map(e=>e.textContent).join(' + ');
+  if(typeof registrarNoCaixa==='function' && valor>0 && !registrarNoCaixa(`${nome} · ${servicos}`, forma, valor)) return;
+  DB.toast('Atendimento finalizado e lançado no caixa','sucesso');
   fecharModal('modal-pdv');
+  if(window._telaAtual==='caixa') navegar('caixa');
 }
 function _bindModalPDV(){
   const sel = document.getElementById('pdv-add-serv');

@@ -89,7 +89,9 @@ R.abrir = function(id){
   const st = (window.AGENDA_NOME_STATUS || {})[a.status] || a.status;
   const aberto = ['agendado', 'confirmado', 'em_atendimento'].includes(a.status);
   const nome1 = x.cliente.split(' ')[0];
-  const lembrete = `Olá, ${nome1}! Lembrete do seu horário: ${x.servico}, ${quando}${a.barbeiro_id ? ' com ' + nomeProf(a.barbeiro_id) : ''}. Até lá!`;
+  const fe = window.lerFe ? lerFe() : null, pal = fe && fe.fe_ativa && fe.fe_lembrete && window.palavraDoDia ? palavraDoDia() : null;
+  const lembrete = `Olá, ${nome1}! Lembrete do seu horário: ${x.servico}, ${quando}${a.barbeiro_id ? ' com ' + nomeProf(a.barbeiro_id) : ''}. Até lá!`
+    + (pal ? `\n\n📖 "${pal.texto}" ${pal.ref}` : '');
   janela('modal-ag-real', `${topo('modal-ag-real', '<i class="bi bi-calendar-event" style="color:var(--accent)"></i> Agendamento')}
     <div style="background:var(--bg2);border-radius:var(--r);padding:14px;margin-bottom:12px">
       <div style="font-size:1.1rem;font-weight:800">${esc(x.cliente)}</div>
@@ -108,6 +110,7 @@ R.abrir = function(id){
     </div>
     ${aberto ? `
       <button class="btn-modal primario" onclick="AGENDA_REAL.concluir('${a.id}')"><i class="bi bi-check2-all"></i> Concluir atendimento</button>
+      ${window.abrirComandaAgendamento ? `<button class="btn-modal secundario" onclick="fecharModal('modal-ag-real');abrirComandaAgendamento('${a.id}')"><i class="bi bi-receipt"></i> Comanda com produtos</button>` : ''}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
         ${a.status === 'agendado' ? `<button class="btn-modal secundario" onclick="AGENDA_REAL.status('${a.id}','confirmado')"><i class="bi bi-check-lg"></i> Confirmar</button>` : ''}
         <button class="btn-modal secundario" onclick="AGENDA_REAL.remarcar('${a.id}')"><i class="bi bi-arrow-repeat"></i> Remarcar</button>

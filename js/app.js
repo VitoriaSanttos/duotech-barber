@@ -16,7 +16,8 @@ function navegar(tela, params={}){
   document.querySelectorAll('[data-nav]').forEach(a=>{
     a.classList.toggle('ativo', a.dataset.nav===tela);
   });
-  const noMais = ['clientes','comissoes','estoque','fidelidade','planos','link','personalizar','config'].includes(tela);
+  const noMais = ['clientes','comissoes','estoque','fidelidade','planos','link','personalizar','config',
+                  'caixa','meta','profit','proposito','academia','campanhas','cadastros'].includes(tela);
   document.querySelectorAll('[data-mais]').forEach(a=>a.classList.toggle('ativo', noMais));
   fecharModal('menu-mais');
   window.scrollTo(0,0);
@@ -25,10 +26,15 @@ function navegar(tela, params={}){
   if (window.telaLigada && !telaLigada(tela)) tela = 'inicio';
   const fn = TELAS[tela];
   if(!fn){ cp.innerHTML='<p style="padding:24px;color:var(--muted)">Tela não encontrada.</p>'; return; }
+  const vez = (window._navVez = (window._navVez||0) + 1);   /* se trocar de tela rápido, a resposta atrasada não atropela a nova */
+  window._telaAtual = tela; window._paramsAtual = params;
   const html = fn(params);
-  if(html instanceof Promise){ cp.innerHTML=''; html.then(h=>{ cp.innerHTML=h; afterRender(tela); }); }
+  if(html instanceof Promise){
+    cp.innerHTML='<div class="carregando" role="status"><span></span> Carregando…</div>';
+    html.then(h=>{ if(vez!==window._navVez) return; cp.innerHTML=h; afterRender(tela); })
+        .catch(e=>{ if(vez!==window._navVez) return; console.error(e); cp.innerHTML=`<div class="section-box acao-vazio">${DB.esc(e.message||'Não foi possível abrir esta tela.')}</div>`; });
+  }
   else{ cp.innerHTML=html; afterRender(tela); }
-  window._telaAtual = tela;
   document.getElementById('titulo-topo').textContent = TITULOS[tela]||'';
 }
 
