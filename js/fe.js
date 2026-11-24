@@ -56,9 +56,9 @@ const PEDIDOS_ORACAO_DEMO = [
 ];
 
 function lerFe(){
-  try { return {fe_ativa:true, fe_app_cliente:true, fe_lembrete:true, fe_fila:true,
+  try { return {fe_ativa:true, fe_app_cliente:true, fe_lembrete:true, fe_fila:true, fe_dizimo:false,
                 ...JSON.parse(localStorage.getItem('tp_demo_fe') || '{}')}; }
-  catch(e){ return {fe_ativa:true, fe_app_cliente:true, fe_lembrete:true, fe_fila:true}; }
+  catch(e){ return {fe_ativa:true, fe_app_cliente:true, fe_lembrete:true, fe_fila:true, fe_dizimo:false}; }
 }
 function salvarFe(f){ try { localStorage.setItem('tp_demo_fe', JSON.stringify(f)); } catch(e){} }
 

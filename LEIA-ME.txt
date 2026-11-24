@@ -16,6 +16,14 @@ VERSÃO 04 (em andamento) · novo Início e PROPÓSITO
     palavra da semana, onde a fé aparece (liga/desliga) e prévia do lembrete.
   - js/fe.js: versículos, reflexões e orações (EXEMPLOS, o Thiago pode trocar).
   - Números do Início ainda são de demonstração (DASH_DEMO em dados-demo.js).
+  - CAIXA (menu Operação): abrir com troco, nova entrada, nova saída (despesa,
+    vale, retirada), fechar contando o dinheiro da gaveta (mostra se bateu,
+    faltou ou sobrou) e histórico dos caixas. Cada "Fechar Atendimento" entra
+    no caixa sozinho. Na abertura aparece a palavra do dia e no fechamento uma
+    gratidão; o lembrete do dízimo é opcional (Propósito, desligado por padrão).
+  - Crescimento: mapa de ocupação por dia e hora, com os horários mais cheios
+    e mais vazios.
+  - Celular: nenhuma tela passa mais da largura (tabelas rolam para o lado).
 
 ARQUIVOS
   index.html            Painel da barbearia (dono e barbeiros)

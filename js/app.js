@@ -27,7 +27,7 @@ function navegar(tela, params={}){
 const TITULOS = {
   inicio:'Início', agenda:'Agenda', fila:'Fila de Espera',
   clientes:'Clientes', financeiro:'Financeiro', comissoes:'Comissões',
-  estoque:'Estoque', fidelidade:'Clube de pontos', planos:'Planos',
+  estoque:'Estoque', caixa:'Caixa', fidelidade:'Clube de pontos', planos:'Planos',
   link:'App do cliente', personalizar:'Personalidade', config:'Configurações',
   proposito:'Propósito',
 };
@@ -126,7 +126,7 @@ function cardSaude({ico, cor, titulo, valor, linhas=[], barra=null, badges='', l
   <div class="dash-valor">${valor}</div>
   ${barra!==null ? `<div class="dash-barra"><div style="width:${Math.min(barra.atual/barra.total*100,100)}%"></div><span class="dash-meta" style="left:${barra.meta}%"></span></div>` : ''}
   ${linhas.map(l=>`<div class="dash-linha"><span>${l[0]}</span><strong>${l[1]}</strong></div>`).join('')}
-  ${link ? `<a class="dash-link" onclick="navegar('${link[1]}')">${link[0]} <i class="bi bi-chevron-right"></i></a>` : ''}
+  ${link ? `<a class="dash-link" onclick='navegar(${JSON.stringify(link[1])}, ${JSON.stringify(link[2]||{})})'>${link[0]} <i class="bi bi-chevron-right"></i></a>` : ''}
 </div>`;
 }
 
@@ -163,7 +163,7 @@ function abaHoje(){
      info:'Mês até hoje, comparado com o mês passado inteiro'})}
   ${cardSaude({ico:'bi-calendar-check', cor:'azul', titulo:'Ocupação da agenda', valor:`${d.ocupacao.toLocaleString('pt-BR')}%`,
      barra:{atual:d.ocupacao, total:100, meta:d.meta_ocupacao},
-     linhas:[['Meta', `${d.meta_ocupacao}%`]], link:['Ver agenda','agenda'],
+     linhas:[['Meta', `${d.meta_ocupacao}%`]], link:['Ver por horário','inicio',{aba:'crescimento'}],
      info:'Horas agendadas divididas pelas horas abertas dos barbeiros'})}
   ${cardSaude({ico:'bi-gem', cor:'ouro', titulo:'Planos ativos', valor:d.planos_ativos,
      badges:`<span class="dash-badges"><span class="dash-badge sobe"><i class="bi bi-arrow-up"></i> ${d.planos_vendidos_mes}</span><span class="dash-badge desce"><i class="bi bi-arrow-down"></i> ${d.planos_cancelados_mes}</span></span>`,
@@ -171,7 +171,7 @@ function abaHoje(){
   ${cardSaude({ico:'bi-tag', cor:'laranja', titulo:'Ticket médio', valor:brl(d.ticket_medio),
      linhas:[['Geral', 'plano + avulso']], info:'Quanto cada cliente deixa, em média, por visita'})}
   ${cardSaude({ico:'bi-receipt', cor:'cinza', titulo:'Comandas abertas', valor:d.comandas_abertas,
-     linhas:[['De outros dias', d.comandas_outros_dias]], link:['Ver comandas','agenda']})}
+     linhas:[['De outros dias', d.comandas_outros_dias]], link:['Ver caixa','caixa']})}
 </div>
 
 <div class="dash-secao"><span class="ponto vermelho"></span><strong>Precisa de ação hoje</strong><span>dinheiro parado e pendências, resolva direto daqui</span></div>
@@ -241,11 +241,42 @@ function abaCrescimento(){
     <div class="legenda mt-8"><span><i class="leg voltaram"></i> Voltaram</span><span><i class="leg novos"></i> Novos</span></div>
   </div>
 </div>
+${mapaOcupacao()}
 <div class="cards-row">
   <div class="stat-card"><div class="label">Clientes que voltam</div><div class="valor">${retencao.toFixed(0)}%</div><div class="sub">dos atendidos em ${ult.mes} já eram clientes</div></div>
   <div class="stat-card"><div class="label">Clientes novos</div><div class="valor">${ult.novos}</div><div class="sub">${pen.novos} em ${pen.mes}</div></div>
   <div class="stat-card"><div class="label">Ticket médio</div><div class="valor">${brl(ult.ticket)}</div><div class="sub">era ${brl(m[0].ticket)} em ${m[0].mes}</div></div>
   <div class="stat-card"><div class="label">Planos no mês</div><div class="valor">+${DASH_DEMO.planos_vendidos_mes - DASH_DEMO.planos_cancelados_mes}</div><div class="sub">${DASH_DEMO.planos_vendidos_mes} vendidos, ${DASH_DEMO.planos_cancelados_mes} cancelados</div></div>
+</div>`;
+}
+
+/* Ocupação por dia e hora (últimos 30 dias). Demo: OCUPACAO_DEMO */
+function mapaOcupacao(){
+  const dias = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+  const horas = [...Array(13)].map((_,i)=>i+7);
+  const faixa = v => v===null ? 'fechado' : v<=20?'f1':v<=40?'f2':v<=60?'f3':v<=80?'f4':'f5';
+  const lista = [];
+  dias.forEach((d,di)=>horas.forEach((h,hi)=>{ const v=OCUPACAO_DEMO[di][hi]; if(v!==null) lista.push({d,h,v}); }));
+  const top = [...lista].sort((a,b)=>b.v-a.v).slice(0,3);
+  const vazios = [...lista].sort((a,b)=>a.v-b.v).slice(0,3);
+  return `
+<div class="section-box">
+  <h3 class="box-tit"><i class="bi bi-grid-3x3-gap"></i> Ocupação por horário <span class="text-muted text-sm" style="font-weight:500">últimos 30 dias</span></h3>
+  <div class="heat-leg">${['0–20%','21–40%','41–60%','61–80%','81–100%'].map((t,i)=>`<span><i class="heat f${i+1}"></i>${t}</span>`).join('')}<span><i class="heat fechado"></i>fechado</span></div>
+  <div class="heat-wrap">
+    <div class="heat-grid" style="grid-template-columns:42px repeat(${dias.length},1fr)">
+      <div></div>${dias.map(d=>`<div class="heat-dia">${d}</div>`).join('')}
+      ${horas.map((h,hi)=>`<div class="heat-hora">${String(h).padStart(2,'0')}h</div>${dias.map((d,di)=>{
+        const v=OCUPACAO_DEMO[di][hi];
+        return `<div class="heat ${faixa(v)}" title="${d} ${h}h: ${v===null?'fechado':v+'%'}"></div>`;}).join('')}`).join('')}
+    </div>
+    <div class="heat-dicas">
+      <div><strong><i class="bi bi-fire"></i> Horários mais cheios</strong>${top.map(x=>`<span>${x.d} ${x.h}h · ${x.v}%</span>`).join('')}
+        <p>Bom horário para cobrar mais caro ou reservar para quem tem plano.</p></div>
+      <div><strong><i class="bi bi-snow"></i> Horários mais vazios</strong>${vazios.map(x=>`<span>${x.d} ${x.h}h · ${x.v}%</span>`).join('')}
+        <p>Bom horário para uma promoção no WhatsApp ou para atender a fila.</p></div>
+    </div>
+  </div>
 </div>`;
 }
 
@@ -304,6 +335,7 @@ TELAS.proposito = ()=>{
       ${tog('fe_app_cliente','No app do cliente','Versículo do dia e botão de pedir oração')}
       ${tog('fe_lembrete','No lembrete do WhatsApp','O lembrete do horário vai com a palavra do dia')}
       ${tog('fe_fila','Na fila de espera','Devocional curto para o cliente ler enquanto espera')}
+      ${tog('fe_dizimo','Lembrete do dízimo','Ao fechar o caixa, mostra 10% do saldo do dia (só para o dono)')}
     </div>
     <div class="section-box">
       <h3 class="box-tit"><i class="bi bi-whatsapp"></i> Prévia do lembrete</h3>
@@ -479,7 +511,7 @@ TELAS.financeiro = ()=>`
     </div>`).join('')}
   </div>
 </div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<div class="grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
   <div class="section-box">
     <h3 style="font-size:.88rem;font-weight:700;margin-bottom:12px">Lançamentos recentes</h3>
     ${[

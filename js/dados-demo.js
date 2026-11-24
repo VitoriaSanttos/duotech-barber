@@ -176,3 +176,15 @@ const DASH_DEMO = {
     {nome:'Pedro Oliveira', situacao:'Vence em 40 dias'},
   ],
 };
+
+/* Ocupação média por dia e hora nos últimos 30 dias (%). null = fechado.
+   Linhas: Seg, Ter, Qua, Qui, Sex, Sáb, Dom · Colunas: 07h a 19h */
+const OCUPACAO_DEMO = [
+  [null,12, 15, 18, 14, 35, 38, 72, 55, 16, 33, 70, 18],
+  [ 66, 52, 47, 31, 45, 12, 30, 48, 36, 58, 39, 74, 65],
+  [ 38, 50, 33, 17, 36, 15, 34, 37, 51, 44, 28,null,null],
+  [null,35, 38, 34, 40, 14, 38, 55, 30, 52, 57, 36,null],
+  [ 88, 54, 69, 56, 55, 32, 53, 58, 49, 47, 34, 33, 15],
+  [ 63, 37, 39, 58, 52, 16, 36, 46, 38,null,null,null,null],
+  [null,null,null,null,null,null,null,null,null,null,null,null,null],
+];
