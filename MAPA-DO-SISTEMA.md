@@ -82,6 +82,21 @@ Legenda: ✅ pronto (modo demonstração) · 🟡 parcial · ⬜ a fazer · ✝�
 | Ticket médio por profissional e por unidade | Ticket médio geral | 🟡 |
 | Fábrica de planos, Prévia, Presentes | — | ⬜ |
 
+## Academia (no lugar do "Skills")
+
+| CashBarber | DuoTech Barber | Status |
+|---|---|---|
+| Aula ao vivo com mentor | **Café com Propósito** (ao vivo toda terça, 08:00), confirmar presença | ✅ ✝️ falta o link real da sala |
+| Continuar assistindo, trilhas, categorias, busca | **Academia** | ✅ |
+| Cursos dos mentores deles | **Cursos de parceiros** (barbeiros e empresários) + "Quero ser parceiro" | 🟡 vitrine de exemplo; vídeos entram por YouTube/Vimeo |
+| Curso "Configurações" | **Como configurar**: 8 guias com botão que abre a tela | ✅ |
+| — | **Cristo na cadeira**: 7 devocionais de 5 min | ✅ ✝️ |
+| — | **Barbearia com propósito** (liderança cristã) | 🟡 aulas a gravar ✝️ |
+
+Decisões de negócio em aberto: como o parceiro ganha (porcentagem da assinatura, valor
+fixo por curso ou divulgação), quem aprova o conteúdo e se cursos ficam liberados para
+todos os planos.
+
 ## Marketing
 
 | CashBarber | DuoTech Barber | Status |

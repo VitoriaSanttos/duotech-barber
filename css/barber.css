@@ -671,3 +671,80 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg2);color:var(--
   .cmp-lin.cab > :first-child{display:none}
   .cmp-lin .dash-badge{justify-self:start}
 }
+
+/* ═══ ACADEMIA ═══ */
+.acad-busca{display:flex;align-items:center;gap:10px;background:var(--card);border:1.5px solid var(--line2);border-radius:var(--r);padding:0 14px;margin-bottom:16px}
+.acad-busca i{color:var(--muted)}
+.acad-busca input{flex:1;border:none;outline:none;padding:12px 0;font-size:.9rem;font-family:inherit;background:none;min-width:0}
+.acad-busca:focus-within{border-color:var(--accent)}
+.acad-live{color:#fff;border-radius:var(--rl);padding:26px 28px;margin-bottom:8px;
+  background:radial-gradient(110% 140% at 100% 0%,rgba(201,168,76,.35),transparent 55%),linear-gradient(135deg,#141414,#0b0b0b)}
+.acad-live-tag{display:inline-flex;align-items:center;gap:8px;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.08);padding:6px 12px;border-radius:20px;color:rgba(255,255,255,.85)}
+.acad-live-tag span{width:8px;height:8px;border-radius:50%;background:#ef5350;box-shadow:0 0 0 4px rgba(239,83,80,.2)}
+.acad-live h2{font-size:1.7rem;font-weight:900;margin:14px 0 4px;letter-spacing:-.02em}
+.acad-live p{color:rgba(255,255,255,.7);font-size:.88rem}
+.acad-live-cont{margin:16px 0;font-size:.74rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.acad-live-cont strong{font-size:1.5rem;color:#fff;letter-spacing:0;margin-left:8px;font-variant-numeric:tabular-nums}
+.acad-linha-tit{display:flex;align-items:center;gap:8px;margin:26px 0 12px;font-size:1.05rem}
+.acad-linha-tit i{color:var(--accent-d)}
+.acad-linha-tit a{margin-left:auto;font-size:.8rem;color:var(--azul);cursor:pointer;font-weight:700}
+.acad-linha{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,280px);gap:14px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
+.acad-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.acad-card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer;scroll-snap-align:start;box-shadow:var(--shadow);transition:transform .15s}
+.acad-card:hover{transform:translateY(-2px)}
+.acad-capa{aspect-ratio:4/3;padding:16px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;position:relative;
+  background:radial-gradient(120% 100% at 100% 0%,var(--c2),transparent 60%),var(--c1)}
+.acad-capa.grande{aspect-ratio:auto;min-height:150px;border-radius:var(--r);margin-bottom:16px}
+.acad-capa strong{font-size:1.15rem;font-weight:900;line-height:1.15;letter-spacing:-.01em}
+.acad-capa.grande strong{font-size:1.6rem}
+.acad-capa-cat{position:absolute;top:14px;left:16px;font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.14);padding:4px 10px;border-radius:20px}
+.acad-capa-n{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.75)}
+.acad-fav{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;border:none;background:rgba(0,0,0,.35);color:#fff;cursor:pointer}
+.acad-fav.on{color:#ff6b81}
+.acad-card-info{padding:12px 14px 14px}
+.acad-card-info strong{display:block;font-size:.9rem}
+.acad-card-info > span{font-size:.75rem;color:var(--muted)}
+.acad-card-info small{display:block;font-size:.72rem;margin-top:4px;color:var(--verde);font-weight:700}
+.acad-card-info small.text-muted{color:var(--muted);font-weight:500}
+.acad-prog{height:5px;background:var(--bg2);border-radius:5px;overflow:hidden;margin-top:8px}
+.acad-prog div{height:100%;background:var(--accent);border-radius:5px}
+.acad-cats{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+.acad-cat{flex-shrink:0;display:flex;align-items:center;gap:8px;border:none;color:#fff;font-weight:800;font-size:.84rem;padding:14px 18px;border-radius:var(--r);cursor:pointer;font-family:inherit;
+  background:radial-gradient(120% 120% at 100% 0%,var(--c2),transparent 70%),var(--c1)}
+.acad-cat.ativa{outline:3px solid var(--accent);outline-offset:2px}
+.acad-parceiro{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:28px;padding:20px;border:1.5px dashed var(--accent);border-radius:var(--r);background:var(--accent-m)}
+.acad-parceiro p{font-size:.82rem;color:var(--ink2);margin-top:2px}
+.acad-voltar{display:inline-flex;align-items:center;gap:4px;font-size:.84rem;font-weight:700;color:var(--azul);cursor:pointer;margin-bottom:12px}
+.acad-curso{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
+.acad-aula-tit small{font-size:.74rem;color:var(--muted);font-weight:700}
+.acad-aula-tit h2{font-size:1.35rem;font-weight:900;margin:2px 0 14px}
+.acad-video{aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;background:#000}
+.acad-video iframe{width:100%;height:100%;border:0}
+.acad-video.vazio{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:rgba(255,255,255,.7);font-size:.86rem;text-align:center;padding:20px}
+.acad-video.vazio i{font-size:2.6rem;color:var(--accent)}
+.acad-devo,.acad-guia{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.acad-devo blockquote{font-size:1.25rem;font-weight:700;line-height:1.4}
+.acad-devo .fe-ref{color:var(--accent-d);margin:6px 0 16px}
+.acad-devo h4{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:14px 0 4px}
+.acad-devo p{font-size:.92rem;line-height:1.6}
+.acad-oracao{font-style:italic;border-left:3px solid var(--accent);padding-left:12px}
+.acad-guia ol{padding-left:22px;margin-bottom:16px}
+.acad-guia li{font-size:.92rem;line-height:1.6;padding:6px 0}
+.acad-aula-acoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.acad-aulas{position:sticky;top:72px}
+.acad-aulas > strong{display:block}
+.acad-aula{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:none;border:none;padding:9px 8px;border-radius:var(--rs);cursor:pointer;font-family:inherit;font-size:.84rem;color:var(--ink)}
+.acad-aula:hover{background:var(--bg2)}
+.acad-aula.atual{background:var(--accent-m);font-weight:700}
+.acad-aula small{display:block;font-size:.7rem;color:var(--muted);font-weight:500}
+.acad-aula-n{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;flex-shrink:0}
+.acad-aula-n.ok{background:var(--verde);border-color:var(--verde);color:#fff}
+@media(max-width:900px){
+  .acad-curso{grid-template-columns:1fr}
+  .acad-aulas{position:static}
+}
+@media(max-width:768px){
+  .acad-live{padding:22px 18px}
+  .acad-live h2{font-size:1.4rem}
+  .acad-linha{grid-auto-columns:78%}
+}

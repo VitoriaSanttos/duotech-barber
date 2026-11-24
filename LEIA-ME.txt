@@ -46,6 +46,13 @@ VERSÃO 04 (em andamento) · novo Início e PROPÓSITO
       obrigatório e histórico. Modo TV (tela cheia para a TV da barbearia) e
       Imagem para o grupo (PNG para o WhatsApp da equipe, com a palavra do dia).
   - MAPA-DO-SISTEMA.md: tudo o que o CashBarber tem, o nome no DuoTech e o status.
+  - ACADEMIA (menu Propósito), em js/academia.js: encontro ao vivo semanal
+    "Café com Propósito" com contagem regressiva e confirmar presença; busca;
+    continuar assistindo; categorias (Fé e propósito, Como configurar, Gestão
+    e lucro, Técnica, Atendimento); trilha "Cristo na cadeira" com 7
+    devocionais; "Primeiros passos no DuoTech" com 8 guias que abrem a tela
+    certa; cursos de parceiros (EXEMPLOS de vitrine, vídeo pelo YouTube) e
+    formulário "Quero ser parceiro". Com a fé desligada, a categoria some.
 
 ARQUIVOS
   index.html            Painel da barbearia (dono e barbeiros)
