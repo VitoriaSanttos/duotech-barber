@@ -2,6 +2,58 @@ DUOTECH BARBER · VERSÃO 03 · Thiago Prado Barbearia
 Planos Gold pagos no Pix, conta do cliente com pontos, agendamento online e a personalidade da barbearia
 =====================================================================================
 
+VERSÃO 04 (em andamento) · novo Início e PROPÓSITO
+  - Início refeito com a estrutura do Dashboard do CashBarber: saudação, abas
+    Hoje e Crescimento, "Saúde do negócio" (faturamento x mês passado x ano,
+    ocupação da agenda com meta, planos vendidos/cancelados, ticket médio,
+    comandas abertas) e "Precisa de ação hoje" (Pix de plano para conferir,
+    mensalidade em aberto com lembrete no WhatsApp, estoque mínimo, contratos
+    dos barbeiros, pedidos de oração).
+  - No topo, no lugar da live do CashBarber: PALAVRA DO DIA (muda todo dia,
+    botão de mandar para a equipe) e MOMENTO DA EQUIPE (oração antes de abrir
+    a agenda, com "Oramos juntos").
+  - Nova tela Propósito > Palavra e oração: pedidos de oração dos clientes,
+    palavra da semana, onde a fé aparece (liga/desliga) e prévia do lembrete.
+  - js/fe.js: versículos, reflexões e orações (EXEMPLOS, o Thiago pode trocar).
+  - Números do Início ainda são de demonstração (DASH_DEMO em dados-demo.js).
+  - CAIXA (menu Operação): abrir com troco, nova entrada, nova saída (despesa,
+    vale, retirada), fechar contando o dinheiro da gaveta (mostra se bateu,
+    faltou ou sobrou) e histórico dos caixas. Cada "Fechar Atendimento" entra
+    no caixa sozinho. Na abertura aparece a palavra do dia e no fechamento uma
+    gratidão; o lembrete do dízimo é opcional (Propósito, desligado por padrão).
+  - Crescimento: mapa de ocupação por dia e hora, com os horários mais cheios
+    e mais vazios.
+  - Celular: nenhuma tela passa mais da largura (tabelas rolam para o lado).
+  - PROFIT (menu Inteligência), em js/profit.js:
+      Itens: margem de serviços, produtos e planos; margem por categoria (da
+      menor para a maior); "Atenção nestes serviços"; premissas editáveis
+      (comissão do barbeiro e do gerente, cartão, taxa fixa, impostos, taxa dos
+      planos); cada item abre e mostra para onde vai cada real, com preço e
+      insumo editáveis. Tudo recalcula na hora.
+      Ponto de equilíbrio: quanto precisa faturar no mês, quanto sobra em cada
+      plano (assinantes e usos editáveis), custos fixos e lucro estimado.
+    Insumos, quantidades vendidas, assinantes e custos fixos são ESTIMATIVAS:
+    o Thiago precisa conferir com os números dele.
+  - Profit passou a se chamar LUCRO REAL (não usamos nomes do CashBarber).
+  - META DO MÊS (menu Inteligência), em js/meta.js:
+      Acompanhar por dia, quinzena e mês; quanto entrou (assinaturas,
+      comandas, assinaturas novas, assinaturas que ainda caem); quanto precisa
+      hoje (meta do dia segue o movimento: sexta pede mais que segunda,
+      domingo fechado não pede nada); projeção otimista e pessimista.
+      Mix da meta (avulsos, extras, produtos), Comparar períodos, Premiação
+      da equipe por quinzena e META COM PROPÓSITO (ao bater a meta, parte vai
+      para uma causa). Configurar em 4 passos e Calibrar com motivo
+      obrigatório e histórico. Modo TV (tela cheia para a TV da barbearia) e
+      Imagem para o grupo (PNG para o WhatsApp da equipe, com a palavra do dia).
+  - MAPA-DO-SISTEMA.md: tudo o que o CashBarber tem, o nome no DuoTech e o status.
+  - ACADEMIA (menu Propósito), em js/academia.js: encontro ao vivo semanal
+    "Café com Propósito" com contagem regressiva e confirmar presença; busca;
+    continuar assistindo; categorias (Fé e propósito, Como configurar, Gestão
+    e lucro, Técnica, Atendimento); trilha "Cristo na cadeira" com 7
+    devocionais; "Primeiros passos no DuoTech" com 8 guias que abrem a tela
+    certa; cursos de parceiros (EXEMPLOS de vitrine, vídeo pelo YouTube) e
+    formulário "Quero ser parceiro". Com a fé desligada, a categoria some.
+
 ARQUIVOS
   index.html            Painel da barbearia (dono e barbeiros)
   agendar.html          App do cliente (é este link que vai para o Instagram e o WhatsApp)

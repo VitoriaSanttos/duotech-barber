@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="css/barber.css?v=03">
+<link rel="stylesheet" href="css/barber.css?v=08">
 <meta name="theme-color" content="#111111">
 </head>
 <body>
@@ -36,6 +36,7 @@
       <li><a href="#" data-nav="inicio"><i class="bi bi-grid-1x2"></i> Início</a></li>
       <li><a href="#" data-nav="agenda"><i class="bi bi-calendar3"></i> Agenda</a></li>
       <li><a href="#" data-nav="fila"><i class="bi bi-people"></i> Fila de Espera</a></li>
+      <li><a href="#" data-nav="caixa"><i class="bi bi-cash-coin"></i> Caixa</a></li>
     </ul>
     <div class="sidebar-sep"></div>
     <div class="sidebar-label">Gestão</div>
@@ -46,11 +47,23 @@
       <li><a href="#" data-nav="estoque"><i class="bi bi-box-seam"></i> Estoque</a></li>
     </ul>
     <div class="sidebar-sep"></div>
+    <div class="sidebar-label">Inteligência</div>
+    <ul>
+      <li><a href="#" data-nav="meta"><i class="bi bi-bullseye"></i> Meta do mês</a></li>
+      <li><a href="#" data-nav="profit"><i class="bi bi-calculator"></i> Lucro real</a></li>
+    </ul>
+    <div class="sidebar-sep"></div>
     <div class="sidebar-label">Programa</div>
     <ul>
       <li><a href="#" data-nav="fidelidade"><i class="bi bi-star"></i> Clube de pontos</a></li>
       <li><a href="#" data-nav="planos"><i class="bi bi-gem"></i> Planos Gold</a></li>
       <li><a href="#" data-nav="link"><i class="bi bi-phone"></i> App do cliente</a></li>
+    </ul>
+    <div class="sidebar-sep"></div>
+    <div class="sidebar-label">Propósito</div>
+    <ul>
+      <li><a href="#" data-nav="proposito"><i class="bi bi-book"></i> Palavra e oração</a></li>
+      <li><a href="#" data-nav="academia"><i class="bi bi-mortarboard"></i> Academia</a></li>
     </ul>
     <div class="sidebar-sep"></div>
     <div class="sidebar-label">Configurar</div>
@@ -72,8 +85,8 @@
   <header class="topo">
     <div class="topo-titulo" id="titulo-topo">Início</div>
     <div class="topo-acoes">
-      <button class="btn-topo" onclick="abrirModalNovoAgendamento()"><i class="bi bi-plus-lg"></i> Novo Agendamento</button>
-      <button class="btn-topo primario" onclick="abrirModalPDV('Cliente')"><i class="bi bi-lightning"></i> Fechar Atendimento</button>
+      <button class="btn-topo" onclick="abrirModalNovoAgendamento()" title="Novo agendamento" aria-label="Novo agendamento"><i class="bi bi-plus-lg"></i> Novo Agendamento</button>
+      <button class="btn-topo primario" onclick="abrirModalPDV('Cliente')" title="Fechar atendimento" aria-label="Fechar atendimento"><i class="bi bi-lightning"></i> Fechar Atendimento</button>
     </div>
   </header>
   <div class="conteudo" id="conteudo-principal"></div>
@@ -94,8 +107,13 @@
 <div id="modais-container"></div>
 
 <script src="js/config.js?v=03"></script>
-<script src="js/dados-demo.js?v=03"></script>
-<script src="js/app.js?v=03"></script>
-<script src="js/modais.js?v=03"></script>
+<script src="js/dados-demo.js?v=05"></script>
+<script src="js/fe.js?v=05"></script>
+<script src="js/app.js?v=08"></script>
+<script src="js/modais.js?v=04"></script>
+<script src="js/caixa.js?v=04"></script>
+<script src="js/profit.js?v=06"></script>
+<script src="js/meta.js?v=06"></script>
+<script src="js/academia.js?v=07"></script>
 </body>
 </html>
