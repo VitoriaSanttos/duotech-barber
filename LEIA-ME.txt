@@ -2,6 +2,21 @@ DUOTECH BARBER · VERSÃO 03 · Thiago Prado Barbearia
 Planos Gold pagos no Pix, conta do cliente com pontos, agendamento online e a personalidade da barbearia
 =====================================================================================
 
+VERSÃO 04 (em andamento) · novo Início e PROPÓSITO
+  - Início refeito com a estrutura do Dashboard do CashBarber: saudação, abas
+    Hoje e Crescimento, "Saúde do negócio" (faturamento x mês passado x ano,
+    ocupação da agenda com meta, planos vendidos/cancelados, ticket médio,
+    comandas abertas) e "Precisa de ação hoje" (Pix de plano para conferir,
+    mensalidade em aberto com lembrete no WhatsApp, estoque mínimo, contratos
+    dos barbeiros, pedidos de oração).
+  - No topo, no lugar da live do CashBarber: PALAVRA DO DIA (muda todo dia,
+    botão de mandar para a equipe) e MOMENTO DA EQUIPE (oração antes de abrir
+    a agenda, com "Oramos juntos").
+  - Nova tela Propósito > Palavra e oração: pedidos de oração dos clientes,
+    palavra da semana, onde a fé aparece (liga/desliga) e prévia do lembrete.
+  - js/fe.js: versículos, reflexões e orações (EXEMPLOS, o Thiago pode trocar).
+  - Números do Início ainda são de demonstração (DASH_DEMO em dados-demo.js).
+
 ARQUIVOS
   index.html            Painel da barbearia (dono e barbeiros)
   agendar.html          App do cliente (é este link que vai para o Instagram e o WhatsApp)
