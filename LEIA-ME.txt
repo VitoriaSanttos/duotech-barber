@@ -34,6 +34,18 @@ VERSÃO 04 (em andamento) · novo Início e PROPÓSITO
       plano (assinantes e usos editáveis), custos fixos e lucro estimado.
     Insumos, quantidades vendidas, assinantes e custos fixos são ESTIMATIVAS:
     o Thiago precisa conferir com os números dele.
+  - Profit passou a se chamar LUCRO REAL (não usamos nomes do CashBarber).
+  - META DO MÊS (menu Inteligência), em js/meta.js:
+      Acompanhar por dia, quinzena e mês; quanto entrou (assinaturas,
+      comandas, assinaturas novas, assinaturas que ainda caem); quanto precisa
+      hoje (meta do dia segue o movimento: sexta pede mais que segunda,
+      domingo fechado não pede nada); projeção otimista e pessimista.
+      Mix da meta (avulsos, extras, produtos), Comparar períodos, Premiação
+      da equipe por quinzena e META COM PROPÓSITO (ao bater a meta, parte vai
+      para uma causa). Configurar em 4 passos e Calibrar com motivo
+      obrigatório e histórico. Modo TV (tela cheia para a TV da barbearia) e
+      Imagem para o grupo (PNG para o WhatsApp da equipe, com a palavra do dia).
+  - MAPA-DO-SISTEMA.md: tudo o que o CashBarber tem, o nome no DuoTech e o status.
 
 ARQUIVOS
   index.html            Painel da barbearia (dono e barbeiros)

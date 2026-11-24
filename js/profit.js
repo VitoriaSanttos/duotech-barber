@@ -117,7 +117,7 @@ TELAS.profit = (params={})=>{
   const p = lerProfit(), r = resumoProfit(p);
   return `
 <div class="dash-ola" style="margin-top:0">
-  <h1>Profit</h1>
+  <h1>Lucro real</h1>
   <p>Quanto realmente sobra em cada serviço, produto e plano, depois de comissão, cartão e imposto.</p>
 </div>
 <div class="dash-abas">
